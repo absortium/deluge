@@ -1,6 +1,6 @@
 [submodule "services/frontend"]
 	path = services/frontend
-	url = git@github.com:Absortium/frontend.git
+	url = git@github.com:absortium/frontend.git
 [submodule "services/backend"]
 	path = services/backend
-	url = git@github.com:Absortium/backend.git
+	url = git@github.com:absortium/backend.git
