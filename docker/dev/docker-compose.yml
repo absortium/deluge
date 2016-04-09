@@ -1,0 +1,88 @@
+version: "2"
+services:
+
+# ======================================================================================================================
+  frontend:
+    container_name: frontend
+    image: frontend
+    build:
+      context: ../../
+      dockerfile: ./docker/dev/frontend/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ../../services/frontend/app:/opt/deluge/services/frontend/app
+      - ../../services/frontend/test:/opt/deluge/services/frontend/test
+      - ../../services/frontend/Gruntfile.js:/opt/deluge/services/frontend/Gruntfile.js
+    links:
+      - "backend:docker.backend"
+
+# ======================================================================================================================
+  backend:
+    container_name: backend
+    image: backend
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/backend/Dockerfile
+    volumes:
+      - ../../services/backend/src:/opt/deluge/services/backend/src
+      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+
+    environment:
+      - PYTHONUNBUFFERED=false
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - SOCIAL_AUTH_GITHUB_OAUTH2_SECRET=${SOCIAL_AUTH_GITHUB_OAUTH2_SECRET}
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET}
+      - SOCIAL_AUTH_TWITTER_OAUTH1_SECRET=${SOCIAL_AUTH_TWITTER_OAUTH1_SECRET}
+      - SOCIAL_AUTH_TWITTER_OAUTH1_KEY=${SOCIAL_AUTH_TWITTER_OAUTH1_KEY}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - COINBASE_API_KEY=${COINBASE_API_KEY}
+      - COINBASE_API_SECRET=${COINBASE_API_SECRET}
+
+# ======================================================================================================================
+  router:
+    container_name: router
+    image: router
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/router/Dockerfile
+    volumes:
+      - ../../services/router:/opt/deluge/services/router
+    ports:
+      - "8080:8080"
+
+# ======================================================================================================================
+  postgres:
+    container_name: postgres
+    image: postgres
+    volumes:
+      - "dbdata:/var/lib/postgresql/data"
+
+# ======================================================================================================================
+  data:
+    restart: always
+    container_name: data
+    image: postgres:latest
+    volumes:
+      - /var/lib/postgresql
+    command: "true"
+
+# ======================================================================================================================
+  datadog:
+    container_name: datadog
+    image: datadog/docker-dd-agent
+    environment:
+     - API_KEY=${DATADOG_API_KEY}
+     - DOGSTATSD_ONLY=true
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /proc:/host/proc:ro
+     - /sys/fs/cgroup:/host/sys/fs/cgroup:ro}
+
+
+volumes:
+  dbdata:
+    driver: local

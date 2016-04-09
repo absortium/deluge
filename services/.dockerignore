@@ -1,0 +1,7 @@
+.git
+frontend/.gitignore
+frontend/.editorconfig
+frontend/node_modules
+frontend/bower_components
+frontend/*.log
+frontend/*.md
