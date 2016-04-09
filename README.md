@@ -5,25 +5,28 @@ git clone https://gitlab.com/andrew.shvv/deluge.git
 cd deluge/docker/dev
 ```
 
-2. Run `postgres` service which serve as database.
+2. Add entry to the /etc/hosts
+* If you run docker containers on the docker-machine, than check your ip and set it to the /etc/hosts
 ```
-sudo bash -x 'echo "absortium.com $(docker-machine)"'
+docker-machine ip
+sudo bash -c 'echo "absortium.com <ip>" >> /etc/hosts'
+```
+* Otherwise set localhost
+```
+sudo bash -c 'echo "absortium.com localhost" >> /etc/hosts'
 ```
 
-2. Run `postgres` service which serve as database.
+3. Run `postgres` service which serve as database.
 ```
 docker-compose up -d postgres
 ```
 
-2. Run `frontend` and make sure that service runs without errors.
+4. Run `frontend` and make sure that service runs without errors.
 ```
 docker-compose up frontend
 ```
 
-3. Go to the `absortium.com`
-```
-docker-compose up frontend
-```
+5. Go to the `absortium.com`
 
 
 ## Step-by-step

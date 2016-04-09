@@ -1,5 +1,12 @@
-.git
+backend/.idea
+backend/.gitignore
+backend/*.md
+backend/.gitattributes
+backend/.git
+
+frontend/.idea
 frontend/.gitignore
+frontend/.gitattributes
 frontend/.editorconfig
 frontend/node_modules
 frontend/bower_components
