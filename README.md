@@ -24,7 +24,7 @@ $ docker-compose up -d postgres
 $ docker-compose up frontend
 ```
 * Go to the `absortium.com`
-
+    
 ## Step-by-step
 * Clone repository, set environment variables and go to the `dev` docker folder.
 ```bash

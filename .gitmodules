@@ -4,3 +4,6 @@
 [submodule "services/backend"]
 	path = services/backend
 	url = git@github.com:absortium/backend.git
+[submodule "useful"]
+	path = useful
+	url = git@github.com:absortium/useful.git
