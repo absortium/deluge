@@ -3,7 +3,7 @@ FROM python:3.5
 
 MAINTAINER Andrey Samokhvalov (andrew.shvv@gmail.com)
 
-ENV APP_PATH  "services/backend/src/"
+ENV APP_PATH  "services/backend/src"
 ENV CORE_PATH "services/backend/libs/core"
 
 ENV DOCKER_PROJECT_PATH  "/opt/deluge"
