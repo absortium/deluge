@@ -32,6 +32,7 @@ services:
       - "router:docker.router"
       - "rabbitmq:docker.broker"
       - "redis:docker.lockmanager"
+      - "worker:docker.worker"
 
     environment:
       - PYTHONUNBUFFERED=false
@@ -67,6 +68,20 @@ services:
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq
+
+# ======================================================================================================================
+  worker:
+    container_name: worker
+    image: worker
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/celery/Dockerfile
+    links:
+      - "rabbitmq:docker.broker"
+    environment:
+      - CELERY_BROKER_URL=amqp://guest@docker.broker
+    volumes:
+      - ../../services/backend/src/absortium/celery:/opt/deluge/services/backend/src/absortium/celery
 
 # ======================================================================================================================
   redis:
