@@ -79,9 +79,11 @@ services:
     links:
       - "rabbitmq:docker.broker"
     environment:
-      - CELERY_BROKER_URL=amqp://guest@docker.broker
+      - PYTHONUNBUFFERED=false
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - ../../services/backend/src/absortium/celery:/opt/deluge/services/backend/src/absortium/celery
+      - ../../services/backend/src:/opt/deluge/services/backend/src
+      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
 
 # ======================================================================================================================
   redis:
