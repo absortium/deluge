@@ -30,9 +30,10 @@ services:
     links:
       - "postgres:docker.postgres"
       - "router:docker.router"
-      - "rabbitmq:docker.broker"
-      - "redis:docker.lockmanager"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
       - "worker:docker.worker"
+
 
     environment:
       - PYTHONUNBUFFERED=false
@@ -44,6 +45,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - COINBASE_API_KEY=${COINBASE_API_KEY}
       - COINBASE_API_SECRET=${COINBASE_API_SECRET}
+      - WHOAMI=DJANGO
 
 # ======================================================================================================================
   router:
@@ -63,6 +65,8 @@ services:
     image: postgres
     volumes:
       - "dbdata:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
 
 # ======================================================================================================================
   rabbitmq:
@@ -77,15 +81,42 @@ services:
       context: ../..
       dockerfile: ./docker/dev/celery/Dockerfile
     links:
-      - "rabbitmq:docker.broker"
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "redis:docker.celery.backend"
     environment:
       - PYTHONUNBUFFERED=false
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - CELERY_TEST=True
+      - WHOAMI=CELERY
     volumes:
       - ../../services/backend/src:/opt/deluge/services/backend/src
       - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
+    command: ["-A" , "absortium.celery.app", "worker", "--loglevel=info", "-c", "3"]
 
 # ======================================================================================================================
+  flower:
+    container_name: flower
+    image: worker
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/celery/Dockerfile
+    links:
+      - "rabbitmq:docker.celery.broker"
+    ports:
+      - "5555:5555"
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+    volumes:
+      - ../../services/backend/src:/opt/deluge/services/backend/src
+      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
+    command: ["flower", "-A" , "absortium.celery.app", "--address=0.0.0.0", "-=port=5555", "--broker=amqp://guest@docker.celery.broker"]
+
+
+# ======================================================================================================================
+
   redis:
     container_name: redis
     image: redis

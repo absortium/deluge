@@ -24,3 +24,11 @@ cleancrossbar() {
     rm "$DELUGE_DIR/services/router/.crossbar/node.key"
     rm "$DELUGE_DIR/services/router/.crossbar/node.pid"
 }
+
+
+# Watch for django test database in realtime
+func_watchpsql() {
+    watch -n 0.2 "psql -h absortium.com -p 5432 -U postgres -d test_postgres -c '$1'"
+}
+
+alias watchpsql=func_watchpsql

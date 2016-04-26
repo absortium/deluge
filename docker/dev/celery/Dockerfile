@@ -10,9 +10,12 @@ ENV DOCKER_PROJECT_PATH  "/opt/deluge"
 RUN apt-get update
 RUN pip3 install --upgrade pip
 
+WORKDIR "$DOCKER_PROJECT_PATH"
+
 # Setup core in develop mode
 COPY "$CORE_PATH" "$CORE_PATH"
 RUN pip3 install -e "$CORE_PATH"
+
 
 # Setup app
 COPY "$APP_PATH/requirements.txt" "$APP_PATH/requirements.txt"
@@ -26,4 +29,4 @@ RUN groupadd user && useradd -g user user
 USER user
 
 ENTRYPOINT ["celery"]
-CMD ["-A" , "absortium.celery.app", "worker", "--loglevel=info"]
+CMD ["-A" , "absortium.celery.app", "worker", "--loglevel=info", "-c", "8"]

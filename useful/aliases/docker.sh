@@ -25,7 +25,7 @@ alias drund="docker run -d -P"
 alias drun="docker run -i -t -P"
 
 # Execute command in container, e.g., $dex base /bin/bash
-alias dexe="docker exec -i -t"
+alias dex="docker exec -i -t"
 
 func_dstop() { docker stop $(docker ps -a -q); }
 # Stop all containers
@@ -46,3 +46,6 @@ alias drmi=func_drmi
 func_dbu() { docker build -t=$1 .; }
 # Dockerfile build, e.g., $dbu tcnksm/test 
 alias dbu=func_dbu
+
+# Clean rabbitmq celery queue
+alias cleanrabbit="dex rabbitmq rabbitmqctl purge_queue celery"
