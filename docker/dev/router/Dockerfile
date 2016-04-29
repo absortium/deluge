@@ -6,7 +6,6 @@ MAINTAINER Andrey Samokhvalov (andrew.shvv@gmail.com)
 ENV APP_PATH  "services/router"
 ENV DOCKER_PROJECT_PATH  "/opt/deluge"
 
-
 RUN apt-get update
 RUN pip3 install --upgrade pip
 

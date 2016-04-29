@@ -30,5 +30,13 @@ cleancrossbar() {
 func_watchpsql() {
     watch -n 0.2 "psql -h absortium.com -p 5432 -U postgres -d test_postgres -c '$1'"
 }
-
 alias watchpsql=func_watchpsql
+
+
+# stream copying folder/file from the docker machine
+# Example: dmstreamcopy /mnt/sda1/var/lib/docker/volumes/dev_ethereumdata/_data ~/Downloads/blockchaindata/
+func_streamcopy() {
+    mkdir -p "$2"
+    docker-machine ssh default "sudo -u root tar czpf - -C $1 . " | pipemeter |tar xzpf - -C $2
+}
+alias dmstreamcopy=func_streamcopy

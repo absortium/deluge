@@ -112,25 +112,45 @@ services:
     volumes:
       - ../../services/backend/src:/opt/deluge/services/backend/src
       - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
-    command: ["flower", "-A" , "absortium.celery.app", "--address=0.0.0.0", "-=port=5555", "--broker=amqp://guest@docker.celery.broker"]
+    command: ["flower", "-A" , "absortium.celery.app", "--address=0.0.0.0", "--port=5555", "--broker=amqp://guest@docker.celery.broker"]
 
 
 # ======================================================================================================================
+  ethnode:
+    container_name: ethnode
+    image: ethnode
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/ethnode/Dockerfile
+    ports:
+      - "8545:8545"
+    volumes:
+      - "ethereumdata:/opt/deluge/services/ethnode/"
+    command: ["--datadir" , ".",  "--rpcapi", "personal,eth,web3,net",  "--rpc", "--rpcaddr" ,"0.0.0.0"]
 
+# ======================================================================================================================
+  ethclient:
+    container_name: ethclient
+    image: ethclient
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/ethclient/Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=false
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - WHOAMI=ETHCLIENT
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    links:
+      - "postgres:docker.postgres"
+      - "ethnode:docker.ethnode"
+    volumes:
+      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
+      - ../../services/ethclient/:/opt/deluge/services/ethclient/
+
+# ======================================================================================================================
   redis:
     container_name: redis
     image: redis
-    ports:
-      - "6379:6379"
-
-# ======================================================================================================================
-  data:
-    restart: always
-    container_name: data
-    image: postgres:latest
-    volumes:
-      - /var/lib/postgresql
-    command: "true"
 
 # ======================================================================================================================
   datadog:
@@ -144,7 +164,9 @@ services:
      - /proc:/host/proc:ro
      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro}
 
-
+# ======================================================================================================================
 volumes:
   dbdata:
+    driver: local
+  ethereumdata:
     driver: local
