@@ -18,34 +18,106 @@ services:
       - "backend:docker.backend"
 
 # ======================================================================================================================
-  backend:
-    container_name: backend
-    image: backend
+  # Base  backend service which include the parameteres that backend and celery worker share
+  base-backend:
+    image: base-backend
     build:
       context: ../..
       dockerfile: ./docker/dev/backend/Dockerfile
     volumes:
       - ../../services/backend/src:/opt/deluge/services/backend/src
-      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
+      - ../../services/backend/libs/:/opt/deluge/services/backend/libs/
+    environment:
+      - PYTHONUNBUFFERED=false
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  # Backend DJANGO service
+  backend:
+    extends: base-backend
+    container_name: backend
+    links:
+      - "postgres:docker.postgres"
+#      - "router:docker.router"
+#      - "rabbitmq:docker.celery.broker"
+#      - "redis:docker.celery.backend"
+#      - "ethwallet:docker.ethwallet"
+#      - "worker-backend"
+    environment:
+      - SOCIAL_AUTH_GITHUB_OAUTH2_SECRET=${SOCIAL_AUTH_GITHUB_OAUTH2_SECRET}
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET}
+      - SOCIAL_AUTH_TWITTER_OAUTH1_SECRET=${SOCIAL_AUTH_TWITTER_OAUTH1_SECRET}
+      - SOCIAL_AUTH_TWITTER_OAUTH1_KEY=${SOCIAL_AUTH_TWITTER_OAUTH1_KEY}
+      - COINBASE_API_KEY=${COINBASE_API_KEY}
+      - COINBASE_API_SECRET=${COINBASE_API_SECRET}
+      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
+      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
+      - ETHWALLET_API_KEY=${ETHWALLET_API_KEY}
+      - ETHWALLET_API_SECRET=${ETHWALLET_API_SECRET}
+      - WHOAMI=DJANGO
+    entrypoint: ["python3", "-u", "manage.py"]
+    command: ["runserver" , "0.0.0.0:3000"]
+
+  # Celery worker
+  worker-backend:
+    extends: base-backend
+    container_name: worker-backend
     links:
       - "postgres:docker.postgres"
       - "router:docker.router"
       - "rabbitmq:docker.celery.broker"
       - "redis:docker.celery.backend"
-      - "worker:docker.worker"
+    environment:
+      - CELERY_TEST=True
+      - WHOAMI=CELERY
+    entrypoint: ["celery"]
+    command: ["-A" , "absortium.celery.app", "worker", "--loglevel=info", "-c", "3"]
 
-
+# ======================================================================================================================
+  base-ethwallet:
+    image: base-ethwallet
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/ethwallet/Dockerfile
     environment:
       - PYTHONUNBUFFERED=false
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      - SOCIAL_AUTH_GITHUB_OAUTH2_SECRET=${SOCIAL_AUTH_GITHUB_OAUTH2_SECRET}
-      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET}
-      - SOCIAL_AUTH_TWITTER_OAUTH1_SECRET=${SOCIAL_AUTH_TWITTER_OAUTH1_SECRET}
-      - SOCIAL_AUTH_TWITTER_OAUTH1_KEY=${SOCIAL_AUTH_TWITTER_OAUTH1_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - COINBASE_API_KEY=${COINBASE_API_KEY}
-      - COINBASE_API_SECRET=${COINBASE_API_SECRET}
+    volumes:
+      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
+      - ../../services/ethwallet/:/opt/deluge/services/ethwallet/
+
+  ethwallet:
+    extends: base-ethwallet
+    container_name: ethwallet
+    environment:
       - WHOAMI=DJANGO
+    links:
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+#      - "redis:docker.celery.backend"
+#      - "ethnode:docker.ethnode"
+#      - "worker-ethwallet"
+    volumes_from:
+      - ethnode
+    entrypoint: ["python3", "-u", "manage.py"]
+    command: ["runserver" , "0.0.0.0:3000"]
+
+  worker-ethwallet:
+      extends: base-ethwallet
+      container_name: worker-ethwallet
+      environment:
+        - WHOAMI=CELERY
+        - C_FORCE_ROOT=True
+      links:
+        - "rabbitmq:docker.celery.broker"
+        - "postgres:docker.postgres"
+#        - "redis:docker.celery.backend"
+#        - "ethnode:docker.ethnode"
+      volumes_from:
+        - ethnode
+      entrypoint: ["celery"]
+      command: ["-A" , "ethwallet.celery.app", "worker", "--loglevel=info", "-c", "3"]
 
 # ======================================================================================================================
   router:
@@ -60,6 +132,44 @@ services:
       - "8080:8080"
 
 # ======================================================================================================================
+  ethnode:
+    container_name: ethnode
+    image: ethnode
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/ethnode/Dockerfile
+    ports:
+      - "8545:8545"
+    volumes:
+      - ../../services/ethnode/genesis.json:/opt/deluge/services/ethnode/genesis.json
+      - ../../services/ethnode//keystore:/opt/deluge/services/ethnode/keystore
+#    command: [
+#      "geth",
+#      "--dev",
+#      "--networkid", "123",
+#      "--nodiscover",
+#      "--mine",
+#      "--maxpeers", "0",
+#      "--datadir", ".",
+#      "--rpc",
+#      "--rpcapi", "personal,db,eth",
+#      "--rpcaddr" ,"0.0.0.0",
+#      "--rpcport", "8545"
+#    ]
+
+    command: [
+      "geth",
+      "--dev",
+      "--mine",
+      "--datadir", ".",
+      "--rpc",
+      "--rpcapi", "personal,db,eth",
+      "--rpcaddr" ,"0.0.0.0",
+      "--rpcport", "8545"
+    ]
+
+
+# ======================================================================================================================
   postgres:
     container_name: postgres
     image: postgres
@@ -69,34 +179,18 @@ services:
       - "5432:5432"
 
 # ======================================================================================================================
+  redis:
+    container_name: redis
+    image: redis
+
+# ======================================================================================================================
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq
 
-# ======================================================================================================================
-  worker:
-    container_name: worker
-    image: worker
-    build:
-      context: ../..
-      dockerfile: ./docker/dev/celery/Dockerfile
-    links:
-      - "rabbitmq:docker.celery.broker"
-      - "postgres:docker.postgres"
-      - "router:docker.router"
-      - "redis:docker.celery.backend"
-    environment:
-      - PYTHONUNBUFFERED=false
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      - CELERY_TEST=True
-      - WHOAMI=CELERY
-    volumes:
-      - ../../services/backend/src:/opt/deluge/services/backend/src
-      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
-    command: ["-A" , "absortium.celery.app", "worker", "--loglevel=info", "-c", "3"]
-
-# ======================================================================================================================
+# ==================================================================================================================== #
+#                                                    RUBBISH                                                           #
+# ==================================================================================================================== #
   flower:
     container_name: flower
     image: worker
@@ -114,44 +208,6 @@ services:
       - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
     command: ["flower", "-A" , "absortium.celery.app", "--address=0.0.0.0", "--port=5555", "--broker=amqp://guest@docker.celery.broker"]
 
-
-# ======================================================================================================================
-  ethnode:
-    container_name: ethnode
-    image: ethnode
-    build:
-      context: ../..
-      dockerfile: ./docker/dev/ethnode/Dockerfile
-    ports:
-      - "8545:8545"
-    volumes:
-      - "ethereumdata:/opt/deluge/services/ethnode/"
-    command: ["--datadir" , ".",  "--rpcapi", "personal,eth,web3,net",  "--rpc", "--rpcaddr" ,"0.0.0.0"]
-
-# ======================================================================================================================
-  ethclient:
-    container_name: ethclient
-    image: ethclient
-    build:
-      context: ../..
-      dockerfile: ./docker/dev/ethclient/Dockerfile
-    environment:
-      - PYTHONUNBUFFERED=false
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      - WHOAMI=ETHCLIENT
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    links:
-      - "postgres:docker.postgres"
-      - "ethnode:docker.ethnode"
-    volumes:
-      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
-      - ../../services/ethclient/:/opt/deluge/services/ethclient/
-
-# ======================================================================================================================
-  redis:
-    container_name: redis
-    image: redis
-
 # ======================================================================================================================
   datadog:
     container_name: datadog
@@ -164,7 +220,6 @@ services:
      - /proc:/host/proc:ro
      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro}
 
-# ======================================================================================================================
 volumes:
   dbdata:
     driver: local

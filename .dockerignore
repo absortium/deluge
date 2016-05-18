@@ -1,0 +1,16 @@
+services/backend/.idea
+services/backend/.gitignore
+services/backend/*.md
+services/backend/.gitattributes
+services/backend/.git
+
+services/frontend/.idea
+services/frontend/.gitignore
+services/frontend/.gitattributes
+services/frontend/.editorconfig
+services/services/frontend/node_modules
+services/frontend/bower_components
+services/frontend/*.log
+services/frontend/*.md
+
+docker/dev/ethnode/ethhash/*
