@@ -4,3 +4,6 @@
 [submodule "services/backend"]
 	path = services/backend
 	url = git@github.com:absortium/backend.git
+[submodule "services/ethwallet"]
+	path = services/ethwallet
+	url = git@github.com:absortium/ethwallet.git

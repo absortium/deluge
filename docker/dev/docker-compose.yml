@@ -15,7 +15,7 @@ services:
       - ../../services/frontend/test:/opt/deluge/services/frontend/test
       - ../../services/frontend/Gruntfile.js:/opt/deluge/services/frontend/Gruntfile.js
     links:
-      - "backend:docker.backend"
+      - "m-backend:docker.backend"
 
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
@@ -23,7 +23,7 @@ services:
     image: base-backend
     build:
       context: ../..
-      dockerfile: ./docker/dev/backend/Dockerfile
+      dockerfile: ./docker/dev/base-backend/Dockerfile
     volumes:
       - ../../services/backend/src:/opt/deluge/services/backend/src
       - ../../services/backend/libs/:/opt/deluge/services/backend/libs/
@@ -31,11 +31,13 @@ services:
       - PYTHONUNBUFFERED=false
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
+      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
 
   # Backend DJANGO service
-  backend:
+  m-backend:
     extends: base-backend
-    container_name: backend
+    container_name: m-backend
     links:
       - "postgres:docker.postgres"
 #      - "router:docker.router"
@@ -50,8 +52,6 @@ services:
       - SOCIAL_AUTH_TWITTER_OAUTH1_KEY=${SOCIAL_AUTH_TWITTER_OAUTH1_KEY}
       - COINBASE_API_KEY=${COINBASE_API_KEY}
       - COINBASE_API_SECRET=${COINBASE_API_SECRET}
-      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
-      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
       - ETHWALLET_API_KEY=${ETHWALLET_API_KEY}
       - ETHWALLET_API_SECRET=${ETHWALLET_API_SECRET}
       - WHOAMI=DJANGO
@@ -59,9 +59,9 @@ services:
     command: ["runserver" , "0.0.0.0:3000"]
 
   # Celery worker
-  worker-backend:
+  w-backend:
     extends: base-backend
-    container_name: worker-backend
+    container_name: w-backend
     links:
       - "postgres:docker.postgres"
       - "router:docker.router"
@@ -78,7 +78,7 @@ services:
     image: base-ethwallet
     build:
       context: ../..
-      dockerfile: ./docker/dev/ethwallet/Dockerfile
+      dockerfile: ./docker/dev/base-ethwallet/Dockerfile
     environment:
       - PYTHONUNBUFFERED=false
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
@@ -87,37 +87,33 @@ services:
       - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
       - ../../services/ethwallet/:/opt/deluge/services/ethwallet/
 
-  ethwallet:
+  m-ethwallet:
     extends: base-ethwallet
-    container_name: ethwallet
+    container_name: m-ethwallet
     environment:
       - WHOAMI=DJANGO
     links:
       - "rabbitmq:docker.celery.broker"
       - "postgres:docker.postgres"
-#      - "redis:docker.celery.backend"
-#      - "ethnode:docker.ethnode"
-#      - "worker-ethwallet"
-    volumes_from:
-      - ethnode
+      - "redis:docker.celery.backend"
+      - "ethnode:docker.ethnode"
+      - "w-ethwallet"
     entrypoint: ["python3", "-u", "manage.py"]
     command: ["runserver" , "0.0.0.0:3000"]
 
-  worker-ethwallet:
-      extends: base-ethwallet
-      container_name: worker-ethwallet
-      environment:
-        - WHOAMI=CELERY
-        - C_FORCE_ROOT=True
-      links:
-        - "rabbitmq:docker.celery.broker"
-        - "postgres:docker.postgres"
-#        - "redis:docker.celery.backend"
-#        - "ethnode:docker.ethnode"
-      volumes_from:
-        - ethnode
-      entrypoint: ["celery"]
-      command: ["-A" , "ethwallet.celery.app", "worker", "--loglevel=info", "-c", "3"]
+  w-ethwallet:
+    extends: base-ethwallet
+    container_name: w-ethwallet
+    environment:
+      - WHOAMI=CELERY
+      - CELERY_TEST=True
+    links:
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+      - "redis:docker.celery.backend"
+      - "ethnode:docker.ethnode"
+    entrypoint: ["celery"]
+    command: ["-A" , "ethwallet.celery.app", "worker", "--loglevel=info", "-c", "3"]
 
 # ======================================================================================================================
   router:
@@ -143,20 +139,6 @@ services:
     volumes:
       - ../../services/ethnode/genesis.json:/opt/deluge/services/ethnode/genesis.json
       - ../../services/ethnode//keystore:/opt/deluge/services/ethnode/keystore
-#    command: [
-#      "geth",
-#      "--dev",
-#      "--networkid", "123",
-#      "--nodiscover",
-#      "--mine",
-#      "--maxpeers", "0",
-#      "--datadir", ".",
-#      "--rpc",
-#      "--rpcapi", "personal,db,eth",
-#      "--rpcaddr" ,"0.0.0.0",
-#      "--rpcport", "8545"
-#    ]
-
     command: [
       "geth",
       "--dev",
