@@ -95,9 +95,9 @@ services:
     links:
       - "rabbitmq:docker.celery.broker"
       - "postgres:docker.postgres"
-      - "redis:docker.celery.backend"
-      - "ethnode:docker.ethnode"
-      - "w-ethwallet"
+#      - "redis:docker.celery.backend"
+#      - "ethnode:docker.ethnode"
+#      - "w-ethwallet"
     entrypoint: ["python3", "-u", "manage.py"]
     command: ["runserver" , "0.0.0.0:3000"]
 
