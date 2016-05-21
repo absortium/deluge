@@ -1,0 +1,68 @@
+version: "2"
+services:
+
+  # Backend DJANGO service
+  m-backend:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
+      - "w-backend"
+    environment:
+      - TESTNET=True
+
+  # Backend celery worker
+  w-backend:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
+    environment:
+      - TESTNET=True
+
+  # Ethereum wallet backend DJANGO service
+  m-ethwallet:
+    links:
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+      - "redis:docker.celery.backend"
+      - "w-ethwallet"
+
+  # Ethereum wallet celery worker
+  w-ethwallet:
+    links:
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+      - "redis:docker.celery.backend"
+      - "ethnode:docker.ethnode"
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  ethnode:
+    ports:
+      - "8545:8545"
+    volumes:
+      - ethtestnet:/opt/deluge/services/ethnode/
+    command: [
+      "geth",
+      "--testnet",
+      "--datadir", ".",
+      "--rpc",
+      "--rpcapi", "personal,db,eth",
+      "--rpcaddr" ,"0.0.0.0",
+      "--rpcport", "8545"
+    ]
+
+  redis:
+      ports:
+      - "6379:6379"
+
+volumes:
+  ethtestnet:
+    driver: local
+  ethrealnet:
+    driver: local

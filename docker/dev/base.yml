@@ -38,13 +38,6 @@ services:
   m-backend:
     extends: base-backend
     container_name: m-backend
-    links:
-      - "postgres:docker.postgres"
-#      - "router:docker.router"
-#      - "rabbitmq:docker.celery.broker"
-#      - "redis:docker.celery.backend"
-#      - "ethwallet:docker.ethwallet"
-#      - "worker-backend"
     environment:
       - SOCIAL_AUTH_GITHUB_OAUTH2_SECRET=${SOCIAL_AUTH_GITHUB_OAUTH2_SECRET}
       - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET}
@@ -62,13 +55,7 @@ services:
   w-backend:
     extends: base-backend
     container_name: w-backend
-    links:
-      - "postgres:docker.postgres"
-      - "router:docker.router"
-      - "rabbitmq:docker.celery.broker"
-      - "redis:docker.celery.backend"
     environment:
-      - CELERY_TEST=True
       - WHOAMI=CELERY
     entrypoint: ["celery"]
     command: ["-A" , "absortium.celery.app", "worker", "--loglevel=info", "-c", "3"]
@@ -87,31 +74,21 @@ services:
       - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
       - ../../services/ethwallet/:/opt/deluge/services/ethwallet/
 
+  # Ethereum wallet backend DJANGO service
   m-ethwallet:
     extends: base-ethwallet
     container_name: m-ethwallet
     environment:
       - WHOAMI=DJANGO
-    links:
-      - "rabbitmq:docker.celery.broker"
-      - "postgres:docker.postgres"
-#      - "redis:docker.celery.backend"
-#      - "ethnode:docker.ethnode"
-#      - "w-ethwallet"
     entrypoint: ["python3", "-u", "manage.py"]
     command: ["runserver" , "0.0.0.0:3000"]
 
+  # Ethereum wallet celery worker
   w-ethwallet:
     extends: base-ethwallet
     container_name: w-ethwallet
     environment:
       - WHOAMI=CELERY
-      - CELERY_TEST=True
-    links:
-      - "rabbitmq:docker.celery.broker"
-      - "postgres:docker.postgres"
-      - "redis:docker.celery.backend"
-      - "ethnode:docker.ethnode"
     entrypoint: ["celery"]
     command: ["-A" , "ethwallet.celery.app", "worker", "--loglevel=info", "-c", "3"]
 
@@ -134,22 +111,6 @@ services:
     build:
       context: ../..
       dockerfile: ./docker/dev/ethnode/Dockerfile
-    ports:
-      - "8545:8545"
-    volumes:
-      - ../../services/ethnode/genesis.json:/opt/deluge/services/ethnode/genesis.json
-      - ../../services/ethnode//keystore:/opt/deluge/services/ethnode/keystore
-    command: [
-      "geth",
-      "--dev",
-      "--mine",
-      "--datadir", ".",
-      "--rpc",
-      "--rpcapi", "personal,db,eth",
-      "--rpcaddr" ,"0.0.0.0",
-      "--rpcport", "8545"
-    ]
-
 
 # ======================================================================================================================
   postgres:
@@ -157,8 +118,6 @@ services:
     image: postgres
     volumes:
       - "dbdata:/var/lib/postgresql/data"
-    ports:
-      - "5432:5432"
 
 # ======================================================================================================================
   redis:
@@ -204,6 +163,4 @@ services:
 
 volumes:
   dbdata:
-    driver: local
-  ethereumdata:
     driver: local

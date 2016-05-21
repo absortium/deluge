@@ -18,7 +18,7 @@ alias di="docker images"
 # Get container IP
 alias dip="docker inspect --format '{{ .NetworkSettings.IPAddress }}'"
 
-# Run deamonized container, e.g., $dkd base /bin/echo hello
+# Run daemonized container, e.g., $dkd base /bin/echo hello
 alias drund="docker run -d -P"
 
 # Run interactive container, e.g., $dki base /bin/bash
@@ -32,13 +32,13 @@ func_dstop() { docker stop $(docker ps -a -q); }
 alias dstop=func_dstop
 
 func_drmc() { docker ps -a | egrep "$1" | grep -v "CONTAINER" | awk '{ printf "%s\n", $1}' | xargs docker rm -f; }
-# Stop and Remove choisen containers
+# Stop and Remove are chosen containers
 # drmc "postgres" - delete postgres container
 # drmc ".*" - delete all containers
 alias drmc=func_drmc
 
 func_drmi() { docker images -a | egrep "$1" | grep -v "IMAGE" | awk '{ printf "%s\n", $3}' | xargs docker rmi -f; }
-# Remove choisen images
+# Remove are chosen images
 # drmi "postgres" - delete postgres image
 # drmi ".*" - delete all images
 alias drmi=func_drmi

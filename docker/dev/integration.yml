@@ -1,0 +1,65 @@
+version: "2"
+services:
+
+  # Backend DJANGO service
+  m-backend:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
+      - "w-backend"
+
+  # Celery worker
+  w-backend:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
+    environment:
+      - CELERY_TEST=True
+
+
+  # Ethereum wallet backend DJANGO service
+  m-ethwallet:
+    links:
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+      - "redis:docker.celery.backend"
+      - "w-ethwallet"
+
+  # Ethereum wallet celery worker
+  w-ethwallet:
+    links:
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+      - "redis:docker.celery.backend"
+      - "ethnode:docker.ethnode"
+    environment:
+      - CELERY_TEST=True
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  ethnode:
+    ports:
+      - "8545:8545"
+    volumes:
+      - ../../services/ethnode/genesis.json:/opt/deluge/services/ethnode/genesis.json
+      - ../../services/ethnode//keystore:/opt/deluge/services/ethnode/keystore
+    command: [
+      "geth",
+      "--dev",
+      "--mine",
+      "--datadir", ".",
+      "--rpc",
+      "--rpcapi", "personal,db,eth",
+      "--rpcaddr" ,"0.0.0.0",
+      "--rpcport", "8545"
+    ]
+
+  redis:
+      ports:
+      - "6379:6379"

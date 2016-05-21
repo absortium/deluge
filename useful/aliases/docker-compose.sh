@@ -3,17 +3,46 @@
 # Docker compose alias and function
 # ------------------------------------
 
+
+func_dcinit() {
+    case '$1' in
+    'unit' )
+        export DOCKER_OVERRIDE="unit.yml" ;;
+    'integration' )
+        export DOCKER_OVERRIDE="integration.yml" ;;
+    'testnet' )
+        export DOCKER_OVERRIDE="testnet.yml" ;;
+    *)
+        echo "Can not find any options similar to '$1', use default 'unit.yml'"
+        export DOCKER_OVERRIDE="unit.yml"
+    esac
+
+    export DOCKER_BASE="base.yml"
+}
+alias dcinit=func_dcinit
+
 # docker-compose alias
-alias dc="docker-compose"
+func_dc() {
+    if [[ -z "$DOCKER_OVERRIDE" || -z "$DOCKER_BASE" ]]
+    then
+        func_dcinit
+    fi
+
+    echo "Docker base file: $DOCKER_BASE"
+    echo "Docker override file: $DOCKER_OVERRIDE"
+    echo "Full command: docker-compose -f $DOCKER_BASE -f $DOCKER_OVERRIDE $@"
+    docker-compose -f "$DOCKER_BASE" -f "$DOCKER_OVERRIDE" "$@"
+}
+alias dc=func_dc
 
 # docker-compose run alias
-alias dcr="docker-compose run"
+alias dcr="dc run"
 
 # docker-compose up alias
-alias dcu="docker-compose up"
+alias dcu="dc up"
 
 # docker-compose run alias
-alias dcl="docker-compose logs"
+alias dcl="dc logs"
 
 # docker-compose run alias
-alias dcb="docker-compose build"
+alias dcb="dc build"

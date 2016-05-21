@@ -1,0 +1,13 @@
+version: "2"
+services:
+  m-backend:
+    links:
+      - "postgres:docker.postgres"
+
+  m-ethwallet:
+    links:
+      - "postgres:docker.postgres"
+
+  postgres:
+    ports:
+      - "5432:5432"
