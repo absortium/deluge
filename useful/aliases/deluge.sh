@@ -7,7 +7,7 @@ export DELUGE_DIR="$PWD/PycharmProjects/deluge/"
 
 # Init deluge project
 ideluge() {
-    source "$DELUGE_DIR/environments/secrets.sh"
+    source "$DELUGE_DIR/.sensitive"
 }
 
 # Go to the deluge directory
