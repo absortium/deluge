@@ -37,7 +37,10 @@ func_drmc() { docker ps -a | egrep "$1" | grep -v "CONTAINER" | awk '{ printf "%
 # drmc ".*" - delete all containers
 alias drmc=func_drmc
 
-func_drmi() { docker images -a | egrep "$1" | grep -v "IMAGE" | awk '{ printf "%s\n", $3}' | xargs docker rmi -f; }
+func_drmi() {
+    func_drmc "$1"
+    docker images -a | egrep "$1" | grep -v "IMAGE" | awk '{ printf "%s\n", $3}' | xargs docker rmi -f;
+}
 # Remove are chosen images
 # drmi "postgres" - delete postgres image
 # drmi ".*" - delete all images

@@ -5,19 +5,39 @@
 
 export DELUGE_DIR="$PWD/PycharmProjects/deluge/"
 
-# Go to the deluge directory
-alias god="cd $DELUGE_DIR"
-
-# Go to the deluge docker dev directory
-alias godd="cd $DELUGE_DIR/docker/dev"
-
-# Go to the deluge services directory
-alias gods="cd $DELUGE_DIR/services"
-
 # Init deluge project
 ideluge() {
     source "$DELUGE_DIR/environments/secrets.sh"
 }
+
+# Go to the deluge directory
+func_god() {
+    declare -a DIRS=("$DELUGE_DIR" $@)
+
+    ## now loop through the above array
+    CD_PATH=""
+    for i in "${DIRS[@]}"
+    do
+        CD_PATH="$CD_PATH/$i"
+        CD_PATH=$(echo "$CD_PATH" | sed "s#//*#/#g")
+    done
+
+    cd "$CD_PATH"
+}
+alias god=func_god
+
+# Go to the deluge docker dev directory
+func_godd() {
+    ideluge
+    func_god "docker/dev" $@
+}
+alias godd=func_godd
+
+# Go to the deluge services directory
+func_gods() {
+    func_god "/services" "$@"
+}
+alias gods=func_gods
 
 # Delete crossbar process files if you forgot to shutdown router gracefully
 cleancrossbar() {
