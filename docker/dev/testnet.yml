@@ -19,8 +19,8 @@ services:
       - "postgres:docker.postgres"
       - "router:docker.router"
       - "rabbitmq:docker.celery.broker"
-      - "m-ethwallet:docker.ethwallet"
       - "redis:docker.celery.backend"
+      - "m-ethwallet:docker.ethwallet"
     environment:
       - TESTNET=True
 
@@ -30,6 +30,7 @@ services:
       - "rabbitmq:docker.celery.broker"
       - "postgres:docker.postgres"
       - "redis:docker.celery.backend"
+      - "ethnode:docker.ethnode"
       - "w-ethwallet"
 
   # Ethereum wallet celery worker

@@ -39,14 +39,8 @@ services:
     extends: base-backend
     container_name: m-backend
     environment:
-      - SOCIAL_AUTH_GITHUB_OAUTH2_SECRET=${SOCIAL_AUTH_GITHUB_OAUTH2_SECRET}
-      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET}
-      - SOCIAL_AUTH_TWITTER_OAUTH1_SECRET=${SOCIAL_AUTH_TWITTER_OAUTH1_SECRET}
-      - SOCIAL_AUTH_TWITTER_OAUTH1_KEY=${SOCIAL_AUTH_TWITTER_OAUTH1_KEY}
-      - COINBASE_API_KEY=${COINBASE_API_KEY}
-      - COINBASE_API_SECRET=${COINBASE_API_SECRET}
-      - ETHWALLET_API_KEY=${ETHWALLET_API_KEY}
-      - ETHWALLET_API_SECRET=${ETHWALLET_API_SECRET}
+      - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
+      - AUTH0_API_KEY=${AUTH0_API_KEY}
       - WHOAMI=DJANGO
     entrypoint: ["python3", "-u", "manage.py"]
     command: ["runserver" , "0.0.0.0:3000"]
@@ -56,6 +50,10 @@ services:
     extends: base-backend
     container_name: w-backend
     environment:
+      - COINBASE_API_KEY=${COINBASE_API_KEY}
+      - COINBASE_API_SECRET=${COINBASE_API_SECRET}
+      - ETHWALLET_API_KEY=${ETHWALLET_API_KEY}
+      - ETHWALLET_API_SECRET=${ETHWALLET_API_SECRET}
       - WHOAMI=CELERY
     entrypoint: ["celery"]
     command: ["-A" , "absortium.celery.app", "worker", "--loglevel=info", "-c", "3"]
@@ -70,6 +68,7 @@ services:
       - PYTHONUNBUFFERED=false
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - AUTH=False
     volumes:
       - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
       - ../../services/ethwallet/:/opt/deluge/services/ethwallet/
