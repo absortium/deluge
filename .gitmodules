@@ -1,9 +1,9 @@
 [submodule "services/frontend"]
 	path = services/frontend
-	url = git@github.com:absortium/frontend.git
+	url = https://github.com/absortium/frontend.git
 [submodule "services/backend"]
 	path = services/backend
-	url = git@github.com:absortium/backend.git
+	url =  https://github.com/absortium/backend.git
 [submodule "services/ethwallet"]
 	path = services/ethwallet
-	url = git@github.com:absortium/ethwallet.git
+	url =  https://github.com/absortium/ethwallet.git
