@@ -3,8 +3,6 @@
 # Deluge alias and function
 # ------------------------------------
 
-export DELUGE_DIR="$PWD/PycharmProjects/deluge/"
-
 # Init deluge project
 ideluge() {
     source "$DELUGE_DIR/.sensitive"

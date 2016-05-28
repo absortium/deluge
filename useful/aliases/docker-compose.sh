@@ -12,9 +12,11 @@ func_dcinit() {
         export DOCKER_OVERRIDE="integration.yml" ;;
     'testnet' )
         export DOCKER_OVERRIDE="testnet.yml" ;;
+    'frontend' )
+        export DOCKER_OVERRIDE="frontend.yml" ;;
     *)
-        echo "Can not find any options similar to '$1', use default 'unit.yml'"
-        export DOCKER_OVERRIDE="unit.yml"
+        echo "Can not find any options similar to '$1', use default $DEFAULT_MODE"
+        export DOCKER_OVERRIDE="$DEFAULT_MODE.yml"
     esac
 
     export DOCKER_BASE="base.yml"

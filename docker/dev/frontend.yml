@@ -1,0 +1,29 @@
+version: "2"
+services:
+
+  # Backend DJANGO service
+  m-backend:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
+      - "w-backend"
+
+  # Celery worker
+  w-backend:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
+    environment:
+      - CELERY_TEST=True
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  redis:
+      ports:
+      - "6379:6379"
