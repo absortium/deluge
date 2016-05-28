@@ -30,6 +30,9 @@ func_dc() {
         func_dcinit
     fi
 
+    # Go the docker directory
+    godd
+
     echo "Docker base file: $DOCKER_BASE"
     echo "Docker override file: $DOCKER_OVERRIDE"
     echo "Full command: docker-compose -f $DOCKER_BASE -f $DOCKER_OVERRIDE $@"

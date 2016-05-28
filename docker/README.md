@@ -17,6 +17,11 @@
         * 'ethwallet' service might working in private net or might be mocked (it dependence).
         * 'postgres', 'rabbitmq', 'celery', 'router' services are required to be up in order to start tests.
         * celery workers are working and celery tasks are executing in another processes.
+    * frontend development:
+        * external systems like 'coinbase' and 'ethwallet' are mocked.
+        * 'postgres', 'rabbitmq', 'celery', 'router' services are required to be up in order to celery task work.
+        * celery workers are working and celery tasks are executing like in real system.
+        * (NOT EXIST YET) special service 'walletnotifier' is working and emulating money notification from 'coinbase' and 'ethwallet' 
     * testnet:
         * 'coinbase' working in sandbox environment (testnet)
         * 'ethwallet' working in testnet, creating non real addresses and transfer non real money.
