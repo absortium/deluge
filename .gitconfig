@@ -1,2 +1,11 @@
-[url "https://github.com/"]
-3	    pushInsteadOf = git@github.com/
+[url "https://github.com/absortium/deluge.git"]
+	pushInsteadOf = git@github.com:absortium/deluge.git
+
+[url "https://github.com/absortium/ethwallet.git"]
+	pushInsteadOf = git@github.com:absortium/ethwallet.git
+
+[url "https://github.com/absortium/frontend.git"]
+	pushInsteadOf = git@github.com:absortium/frontend.git
+
+[url "https://github.com/absortium/backend.git"]
+	pushInsteadOf = git@github.com:absortium/backend.git
