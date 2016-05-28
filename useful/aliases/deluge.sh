@@ -5,12 +5,12 @@
 
 # Init deluge project
 ideluge() {
-    source "$DELUGE_DIR/.sensitive"
+    source "$DELUGE_PATH/.sensitive"
 }
 
 # Go to the deluge directory
 func_god() {
-    declare -a DIRS=("$DELUGE_DIR" $@)
+    declare -a DIRS=("$DELUGE_PATH" $@)
 
     ## now loop through the above array
     CD_PATH=""
@@ -39,8 +39,8 @@ alias gods=func_gods
 
 # Delete crossbar process files if you forgot to shutdown router gracefully
 cleancrossbar() {
-    rm "$DELUGE_DIR/services/router/.crossbar/node.key"
-    rm "$DELUGE_DIR/services/router/.crossbar/node.pid"
+    rm "$DELUGE_PATH/services/router/.crossbar/node.key"
+    rm "$DELUGE_PATH/services/router/.crossbar/node.pid"
 }
 
 
