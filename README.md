@@ -1,5 +1,5 @@
 ## About
-Absortium - it is attempt of creation open source multicurrency, token exchange.  
+`Absortium` - it is attempt of creation open source multi crypto currency,token exchange.  
 
 ## Parts
 * [frontend](https://github.com/absortium/frontend)
