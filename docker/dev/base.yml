@@ -12,8 +12,9 @@ services:
       - "80:80"
     volumes:
       - ../../services/frontend/app:/opt/deluge/services/frontend/app
-      - ../../services/frontend/test:/opt/deluge/services/frontend/test
-      - ../../services/frontend/Gruntfile.js:/opt/deluge/services/frontend/Gruntfile.js
+      - ../../services/frontend/internals:/opt/deluge/services/frontend/internals
+      - ../../services/frontend/server:/opt/deluge/services/frontend/server
+      - ../../services/frontend/package.json:/opt/deluge/services/frontend/package.json
     links:
       - "m-backend:docker.backend"
 
