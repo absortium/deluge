@@ -57,7 +57,7 @@ services:
       - ETHWALLET_API_SECRET=${ETHWALLET_API_SECRET}
       - WHOAMI=CELERY
     entrypoint: ["celery"]
-    command: ["-A" , "absortium.celery.app", "worker", "--loglevel=info", "-c", "3"]
+    command: ["-A" , "absortium.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
 # ======================================================================================================================
   base-ethwallet:
@@ -90,7 +90,7 @@ services:
     environment:
       - WHOAMI=CELERY
     entrypoint: ["celery"]
-    command: ["-A" , "ethwallet.celery.app", "worker", "--loglevel=info", "-c", "3"]
+    command: ["-A" , "ethwallet.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
 # ======================================================================================================================
   router:

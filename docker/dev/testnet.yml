@@ -11,7 +11,7 @@ services:
       - "m-ethwallet:docker.ethwallet"
       - "w-backend"
     environment:
-      - TESTNET=True
+      - MODE="testnet"
 
   # Backend celery worker
   w-backend:
@@ -22,7 +22,7 @@ services:
       - "redis:docker.celery.backend"
       - "m-ethwallet:docker.ethwallet"
     environment:
-      - TESTNET=True
+      - MODE="testnet"
 
   # Ethereum wallet backend DJANGO service
   m-ethwallet:
