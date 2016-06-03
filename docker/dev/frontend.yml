@@ -18,11 +18,23 @@ services:
       - "rabbitmq:docker.celery.broker"
       - "redis:docker.celery.backend"
     environment:
-      - MODE="frontend"
+      - MODE=frontend
 
   postgres:
     ports:
       - "5432:5432"
+
+  notifier:
+    extends: base-backend
+    container_name: notifier
+    links:
+      - "postgres:docker.postgres"
+      - "m-backend:docker.backend"
+
+    environment:
+      - WHOAMI=NOTIFIER
+    entrypoint: ["python3"]
+    command: ["manage.py", "mocknotifier"]
 
   redis:
       ports:
