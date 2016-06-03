@@ -5,7 +5,7 @@
 
 
 func_dcinit() {
-    case '$1' in
+    case "$1" in
     'unit' )
         export DOCKER_OVERRIDE="unit.yml" ;;
     'integration' )
