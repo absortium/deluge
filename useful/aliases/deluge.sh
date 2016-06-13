@@ -50,6 +50,11 @@ func_watchpsql() {
 }
 alias watchpsql=func_watchpsql
 
+# Sync time on the docker machine after sleep
+func_recovertime() {
+    docker-machine ssh default 'sudo ntpclient -s -h pool.ntp.org'
+}
+alias recovertime=func_recovertime
 
 # stream copying folder/file from the docker machine
 # Example: dmstreamcopy /mnt/sda1/var/lib/docker/volumes/dev_ethereumdata/_data ~/Downloads/blockchaindata/

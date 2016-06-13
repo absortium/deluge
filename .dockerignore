@@ -5,7 +5,6 @@ services/backend/.gitattributes
 services/backend/.git
 
 services/frontend/.idea
-services/frontend/.gitignore
 services/frontend/.gitattributes
 services/frontend/.git
 services/frontend/.editorconfig

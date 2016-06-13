@@ -15,8 +15,10 @@ services:
       - ../../services/frontend/internals:/opt/deluge/services/frontend/internals
       - ../../services/frontend/server:/opt/deluge/services/frontend/server
       - ../../services/frontend/package.json:/opt/deluge/services/frontend/package.json
+      - ../../services/frontend/.gitignore:/opt/deluge/services/frontend/.gitignore
     links:
       - "m-backend:docker.backend"
+    command: ["npm", "start"]
 
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
