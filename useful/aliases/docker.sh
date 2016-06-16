@@ -50,5 +50,42 @@ func_dbu() { docker build -t=$1 .; }
 # Dockerfile build, e.g., $dbu tcnksm/test 
 alias dbu=func_dbu
 
+func_flushdb() {
+    drmc ".*" 
+    docker volume rm dev_dbdata
+    dc up -d postgres
+    sleep 4
+    dc run m-backend migrate
+
+}
+# Flush postgres databse - delete container and delete docker volume
+alias flushdb=func_flushdb
+
+# Connect to the postgres database and execute the command if exist
+func_pdbconnect() {
+    echo "Command: $@"
+    if [ -z "$@" ]; then
+        psql -h absortium.com  -p 5432 -U postgres
+    else
+        psql -h absortium.com  -p 5432 -U postgres -c "$@"
+    fi
+}
+alias pdbconnect=func_pdbconnect
+
+func_pdboffers() {
+    func_pdbconnect "select * from absortium_offer;"
+}
+alias pdboffers=func_pdboffers
+
+func_pdbaccounts() {
+    func_pdbconnect "select * from absortium_account;"
+}
+alias pdbaccounts=func_pdbaccounts
+
+func_pdbexchanges() {
+    func_pdbconnect "select * from absortium_exchange;"
+}
+alias pdbexchanges=func_pdbexchanges
+
 # Clean rabbitmq celery queue
 alias cleanrabbit="dex rabbitmq rabbitmqctl purge_queue celery"
