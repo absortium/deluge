@@ -73,17 +73,30 @@ func_pdbconnect() {
 alias pdbconnect=func_pdbconnect
 
 func_pdboffers() {
-    func_pdbconnect "select * from absortium_offer;"
+    if [ -z "$@" ]; then
+        func_pdbconnect "select * from absortium_offer;"
+    else
+        func_pdbconnect "select * from absortium_offer $@;"
+    fi
 }
 alias pdboffers=func_pdboffers
 
 func_pdbaccounts() {
-    func_pdbconnect "select * from absortium_account;"
+    if [ -z "$@" ]; then
+        func_pdbconnect "select * from absortium_account;"
+    else
+        func_pdbconnect "select * from absortium_account $@;"
+    fi
+    
 }
 alias pdbaccounts=func_pdbaccounts
 
 func_pdbexchanges() {
-    func_pdbconnect "select * from absortium_exchange;"
+    if [ -z "$@" ]; then
+        func_pdbconnect "select * from absortium_exchange;"
+    else
+        func_pdbconnect "select * from absortium_exchange $@;"
+    fi
 }
 alias pdbexchanges=func_pdbexchanges
 
