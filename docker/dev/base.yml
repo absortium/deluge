@@ -9,7 +9,7 @@ services:
       context: ../../
       dockerfile: ./docker/dev/frontend/Dockerfile
     ports:
-      - "80:80"
+      - "3000:3000"
     volumes:
       - ../../services/frontend/app:/opt/deluge/services/frontend/app
       - ../../services/frontend/internals:/opt/deluge/services/frontend/internals
@@ -46,7 +46,7 @@ services:
       - AUTH0_API_KEY=${AUTH0_API_KEY}
       - WHOAMI=DJANGO
     entrypoint: ["python3", "-u", "manage.py"]
-    command: ["runserver" , "0.0.0.0:3000"]
+    command: ["runserver" , "0.0.0.0:3001"]
 
   # Celery worker
   w-backend:
@@ -83,7 +83,7 @@ services:
     environment:
       - WHOAMI=DJANGO
     entrypoint: ["python3", "-u", "manage.py"]
-    command: ["runserver" , "0.0.0.0:3000"]
+    command: ["runserver", "0.0.0.0:3001"]
 
   # Ethereum wallet celery worker
   w-ethwallet:
