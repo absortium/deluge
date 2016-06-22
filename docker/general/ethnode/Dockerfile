@@ -18,9 +18,6 @@ RUN mkdir -p "$APP_PATH"
 # Change previlage
 RUN chown ethereum "$APP_PATH"
 
-# Copy genesis block in order to preallocate some amount of eth.
-#COPY "$APP_PATH/genesis.json" "$APP_PATH/genesis.json"
-
 # Create an ethereum data mount point
 VOLUME ["$DOCKER_PROJECT_PATH/$APP_PATH"]
 
@@ -29,8 +26,5 @@ VOLUME ["$DOCKER_PROJECT_PATH/$APP_PATH"]
 
 WORKDIR "$DOCKER_PROJECT_PATH/$APP_PATH"
 
-#RUN ["geth", "--datadir", ".", "init",  "genesis.json"]
-
-ENTRYPOINT []
-CMD []
-# 'ethereum/client-go' already has 'geth' entrypoint
+ENTRYPOINT ["geth"]
+CMD ["--help"]

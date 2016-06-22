@@ -15,9 +15,6 @@ alias dpsa="docker ps -a"
 # Get images
 alias di="docker images"
 
-# Get container IP
-alias dip="docker inspect --format '{{ .NetworkSettings.IPAddress }}'"
-
 # Run daemonized container, e.g., $dkd base /bin/echo hello
 alias drund="docker run -d -P"
 
