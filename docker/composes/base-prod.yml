@@ -1,0 +1,119 @@
+version: "2"
+services:
+
+# ======================================================================================================================
+  frontend:
+    container_name: frontend
+    image: frontend
+    build:
+      context: ../../
+      dockerfile: ./docker/prod/frontend/Dockerfile
+    ports:
+      - "80:80"
+    links:
+      - "m-backend:docker.backend"
+    command: ["run", "start:prod"]
+
+# ======================================================================================================================
+  # Base  backend service which include the parameteres that backend and celery worker share
+  base-backend:
+    image: base-backend
+    build:
+      context: ../..
+      dockerfile: ./docker/prod/base-backend/Dockerfile
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
+      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
+
+  # Backend DJANGO service
+  m-backend:
+    extends: base-backend
+    container_name: m-backend
+    environment:
+      - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
+      - AUTH0_API_KEY=${AUTH0_API_KEY}
+      - WHOAMI=DJANGO
+    entrypoint: ["gunicorn"]
+    command: ["-b" , "0.0.0.0:3000", "--workers=5",  "wsgi"]
+
+  # Celery worker
+  w-backend:
+    extends: base-backend
+    container_name: w-backend
+    environment:
+      - COINBASE_API_KEY=${COINBASE_API_KEY}
+      - COINBASE_API_SECRET=${COINBASE_API_SECRET}
+      - ETHWALLET_API_KEY=${ETHWALLET_API_KEY}
+      - ETHWALLET_API_SECRET=${ETHWALLET_API_SECRET}
+      - WHOAMI=CELERY
+    entrypoint: ["celery"]
+    command: ["-A" , "absortium.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
+
+# ======================================================================================================================
+  base-ethwallet:
+    image: base-ethwallet
+    build:
+      context: ../..
+      dockerfile: ./docker/prod/base-ethwallet/Dockerfile
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  # Ethereum wallet backend DJANGO service
+  m-ethwallet:
+    extends: base-ethwallet
+    container_name: m-ethwallet
+    environment:
+      - WHOAMI=DJANGO
+    entrypoint: ["gunicorn"]
+    command: ["-b" , "0.0.0.0:3000", "--workers=5",  "wsgi"]
+
+  # Ethereum wallet celery worker
+  w-ethwallet:
+    extends: base-ethwallet
+    container_name: w-ethwallet
+    environment:
+      - WHOAMI=CELERY
+    entrypoint: ["celery"]
+    command: ["-A" , "ethwallet.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
+
+# ======================================================================================================================
+  router:
+    container_name: router
+    image: router
+    build:
+      context: ../..
+      dockerfile: ./docker/general/router/Dockerfile
+    ports:
+      - "8080:8080"
+
+# ======================================================================================================================
+  ethnode:
+    container_name: ethnode
+    image: ethnode
+    build:
+      context: ../..
+      dockerfile: ./docker/general/ethnode/Dockerfile
+
+# ======================================================================================================================
+  postgres:
+    container_name: postgres
+    image: postgres
+    volumes:
+      - "dbdata:/var/lib/postgresql/data"
+
+# ======================================================================================================================
+  redis:
+    container_name: redis
+    image: redis
+
+# ======================================================================================================================
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq
+
+volumes:
+  dbdata:
+    driver: local

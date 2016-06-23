@@ -5,21 +5,31 @@
 
 
 func_dcinit() {
-    case "$1" in
-    'unit' )
-        export DOCKER_OVERRIDE="unit.yml" ;;
-    'integration' )
-        export DOCKER_OVERRIDE="integration.yml" ;;
-    'testnet' )
-        export DOCKER_OVERRIDE="testnet.yml" ;;
-    'frontend' )
-        export DOCKER_OVERRIDE="frontend.yml" ;;
-    *)
-        echo "Can not find any options similar to '$1', use default $DEFAULT_MODE"
-        export DOCKER_OVERRIDE="$DEFAULT_MODE.yml"
-    esac
+    declare DELUGE_MODE="$1"
 
-    export DOCKER_BASE="base.yml"
+    if [ -z "$DELUGE_MODE" ]; then
+        echo "Use default init mode '$DEFAULT_MODE'"
+        DELUGE_MODE="$DEFAULT_MODE"
+    fi
+    
+    case "$DELUGE_MODE" in
+    'unit' )
+        export DOCKER_OVERRIDE="unit.yml"
+        export DOCKER_BASE="base-dev.yml";;
+
+    'integration' )
+        export DOCKER_OVERRIDE="integration.yml"
+        export DOCKER_BASE="base-dev.yml";;
+    'testnet' )
+        export DOCKER_OVERRIDE="testnet.yml"
+        export DOCKER_BASE="base-prod.yml";;
+
+    'frontend' )
+        export DOCKER_OVERRIDE="frontend.yml"
+        export DOCKER_BASE="base-dev.yml";;
+    *)
+        echo "Can not find any options similar to '$1'"
+    esac
 }
 alias dcinit=func_dcinit
 

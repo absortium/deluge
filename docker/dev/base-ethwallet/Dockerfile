@@ -5,13 +5,14 @@ MAINTAINER Andrey Samokhvalov (andrew.shvv@gmail.com)
 
 ENV APP_PATH "services/ethwallet"
 ENV CORE_PATH "services/backend/libs/core"
-#ENV ETHEREUM_NODE_PATH "services/ethnode"
 
 ENV DOCKER_PROJECT_PATH  "/opt/deluge"
 
-RUN apt-get update
-RUN pip3 install --upgrade pip
+# Ensure that Python outputs everything that's printed inside
+# the application rather than buffering it.
+ENV PYTHONUNBUFFERED 1
 
+RUN apt-get update && pip3 install --upgrade pip
 
 # Add non-root user in order to run celery
 RUN groupadd ethereum && useradd -g ethereum ethereum

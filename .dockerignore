@@ -3,6 +3,7 @@ services/backend/.gitignore
 services/backend/*.md
 services/backend/.gitattributes
 services/backend/.git
+services/backend/src/absortium/celerybeat-*
 
 services/frontend/.idea
 services/frontend/.gitattributes
@@ -13,4 +14,6 @@ services/frontend/bower_components
 services/frontend/*.log
 services/frontend/*.md
 
+
+services/ethwallet/celerybeat-*
 docker/dev/ethnode/ethhash/*

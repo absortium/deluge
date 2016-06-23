@@ -18,7 +18,7 @@ services:
       - ../../services/frontend/.gitignore:/opt/deluge/services/frontend/.gitignore
     links:
       - "m-backend:docker.backend"
-    command: ["npm", "start"]
+    command: ["run", "start"]
 
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
@@ -31,7 +31,6 @@ services:
       - ../../services/backend/src:/opt/deluge/services/backend/src
       - ../../services/backend/libs/:/opt/deluge/services/backend/libs/
     environment:
-      - PYTHONUNBUFFERED=false
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
@@ -68,7 +67,6 @@ services:
       context: ../..
       dockerfile: ./docker/dev/base-ethwallet/Dockerfile
     environment:
-      - PYTHONUNBUFFERED=false
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - AUTH=False
@@ -100,9 +98,9 @@ services:
     image: router
     build:
       context: ../..
-      dockerfile: ./docker/dev/router/Dockerfile
+      dockerfile: ./docker/general/router/Dockerfile
     volumes:
-      - ../../services/router:/opt/deluge/services/router
+      - ../../services/router/.crossbar/config.json:/opt/deluge/services/router/.crossbar/config.json
     ports:
       - "8080:8080"
 
@@ -112,7 +110,7 @@ services:
     image: ethnode
     build:
       context: ../..
-      dockerfile: ./docker/dev/ethnode/Dockerfile
+      dockerfile: ./docker/general/ethnode/Dockerfile
 
 # ======================================================================================================================
   postgres:

@@ -7,8 +7,12 @@ ENV APP_PATH  "services/backend/src"
 ENV LIBS_PATH "services/backend/libs/"
 ENV DOCKER_PROJECT_PATH  "/opt/deluge"
 
-RUN apt-get update
-RUN pip3 install --upgrade pip
+# Ensure that Python outputs everything that's printed inside
+# the application rather than buffering it.
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && pip3 install --upgrade pip && pip3 install gunicorn
+
 
 # Define working directory.
 WORKDIR "$DOCKER_PROJECT_PATH"

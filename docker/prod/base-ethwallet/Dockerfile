@@ -8,9 +8,11 @@ ENV CORE_PATH "services/backend/libs/core"
 
 ENV DOCKER_PROJECT_PATH  "/opt/deluge"
 
-RUN apt-get update
-RUN pip3 install --upgrade pip
+# Ensure that Python outputs everything that's printed inside
+# the application rather than buffering it.
+ENV PYTHONUNBUFFERED 1
 
+RUN apt-get update && pip3 install --upgrade pip && pip3 install gunicorn
 
 # Add non-root user in order to run celery
 RUN groupadd ethereum && useradd -g ethereum ethereum

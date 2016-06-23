@@ -9,8 +9,7 @@ WORKDIR "$DOCKER_PROJECT_PATH/$APP_PATH"
 
 COPY "$APP_PATH" "."
 
-RUN npm --production install
-RUN npm run build
+RUN npm run preinstall && npm install && npm run postinstall && npm run build && npm prune --production
 
 ENTRYPOINT ["npm"]
 CMD ["-l"]
