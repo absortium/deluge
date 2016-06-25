@@ -4,30 +4,30 @@ services:
   frontend:
     image: frontend
     build:
-      context: ../
-      dockerfile: ./docker/containers/${CONTAINERS_TYPE}/frontend/Dockerfile
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/containers/dev/frontend/Dockerfile
 
   base-backend:
     image: base-backend
     build:
-      context: ../
-      dockerfile: ./docker/containers/${CONTAINERS_TYPE}/base-backend/Dockerfile
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/containers/dev/base-backend/Dockerfile
 
   base-ethwallet:
     image: base-ethwallet
     build:
-      context: ../
-      dockerfile: ./docker/containers/${CONTAINERS_TYPE}/base-ethwallet/Dockerfile
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/containers/dev/base-ethwallet/Dockerfile
 
   router:
     container_name: router
     image: router
     build:
-      context: ../
+      context: ${DELUGE_PATH}
       dockerfile: ./docker/containers/general/router/Dockerfile
 
   ethnode:
     image: ethnode
     build:
-      context: ../
+      context: ${DELUGE_PATH}
       dockerfile: ./docker/containers/general/ethnode/Dockerfile

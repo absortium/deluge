@@ -4,13 +4,13 @@ services:
 # ======================================================================================================================
   frontend:
     container_name: frontend
-    image: absortium/frontend:latest
+    image: absortium/frontend
     command: ["run", "start:prod"]
 
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
   base-backend:
-    image: absortium/base-backend:latest
+    image: absortium/base-backend
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -41,9 +41,22 @@ services:
     entrypoint: ["celery"]
     command: ["-A" , "absortium.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
+  # Backend DJANGO migration service
+  migrate-backend:
+    extends: base-backend
+    container_name: m-backend
+    links:
+      - "postgres:docker.postgres"
+    environment:
+      - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
+      - AUTH0_API_KEY=${AUTH0_API_KEY}
+      - WHOAMI=DJANGO
+    entrypoint: ["python", "-u", "manage.py"]
+    command: ["migrate"]
+
 # ======================================================================================================================
   base-ethwallet:
-    image: absortium/base-ethwallet:latest
+    image: absortium/base-ethwallet
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -66,10 +79,21 @@ services:
     entrypoint: ["celery"]
     command: ["-A" , "ethwallet.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
+  # Ethereum wallet DJANGO migration service
+  migrate-ethwallet:
+    extends: base-ethwallet
+    container_name: m-ethwallet
+    environment:
+      - WHOAMI=DJANGO
+    links:
+      - "postgres:docker.postgres"
+    entrypoint: ["python", "-u", "manage.py"]
+    command: ["migrate"]
+
 # ======================================================================================================================
   router:
-    container_name: absortium/router:latest
-    image: router
+    container_name: router
+    image: absortium/router:latest
     ports:
       - "8080:8080"
 

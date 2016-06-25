@@ -1,11 +1,16 @@
+Docker containers files like `dev.yml` and `prod.yml` determines how you containers should behave, and docker compose
+file like `(integration|frontend|testnet...etc).yaml` determine how containers are linked with each other.
+
+For example: In `unit` mode all systems are mocked and the only thing that we need it is the service itself, etc.
+
 * Docker containers are divided on three types:
     * dev - containers are created for development:
         * work directories are mounted in order to have fast code update.
-        * libraries `core` and `ethwallet` are installed in development mode.
+        * libraries `core` and `ethwallet` are installed in development mode in order to have fast code update.
     * prod - containers are created for production:
-        * work directories are copied from the source directory rather than mounted, like in dev mode.
-        * libraries `core` and `ethwallet` are installed in normal mode.
-    * general - containers which are identical for both dev and prod
+        * work directories are copied from the source directory rather than mounted.
+        * libraries `core` and `ethwallet` are installed not in development mode.
+    * general - containers which are identical for both dev and prod.
         
 * Docker compose files are divided on four types:
     * unit tests:
