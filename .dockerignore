@@ -16,4 +16,4 @@ services/frontend/*.md
 
 
 services/ethwallet/celerybeat-*
-docker/dev/ethnode/ethhash/*
+docker/containers/dev/ethnode/ethhash/*

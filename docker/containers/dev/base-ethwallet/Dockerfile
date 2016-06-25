@@ -19,15 +19,6 @@ RUN groupadd ethereum && useradd -g ethereum ethereum
 
 WORKDIR "$DOCKER_PROJECT_PATH"
 
-## Create ethereum data dir
-#RUN mkdir -p "$ETHEREUM_NODE_PATH"
-#
-## Change previlage
-#RUN chown ethereum "$ETHEREUM_NODE_PATH"
-#
-## Create an ethereum data mount point
-#VOLUME ["$ETHEREUM_NODE_PATH"]
-
 # Setup core in develop mode
 COPY "$CORE_PATH" "$CORE_PATH"
 RUN pip3 install -e "$CORE_PATH"

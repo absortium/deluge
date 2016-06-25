@@ -1,0 +1,33 @@
+version: "2"
+services:
+
+  frontend:
+    image: frontend
+    build:
+      context: ../
+      dockerfile: ./docker/containers/${CONTAINERS_TYPE}/frontend/Dockerfile
+
+  base-backend:
+    image: base-backend
+    build:
+      context: ../
+      dockerfile: ./docker/containers/${CONTAINERS_TYPE}/base-backend/Dockerfile
+
+  base-ethwallet:
+    image: base-ethwallet
+    build:
+      context: ../
+      dockerfile: ./docker/containers/${CONTAINERS_TYPE}/base-ethwallet/Dockerfile
+
+  router:
+    container_name: router
+    image: router
+    build:
+      context: ../
+      dockerfile: ./docker/containers/general/router/Dockerfile
+
+  ethnode:
+    image: ethnode
+    build:
+      context: ../
+      dockerfile: ./docker/containers/general/ethnode/Dockerfile

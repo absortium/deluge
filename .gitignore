@@ -59,4 +59,4 @@ target/
 .idea
 .sensitive
 .DS_Store
-docker/dev/ethnode/ethash/*
+docker/containers/dev/ethnode/ethash/*

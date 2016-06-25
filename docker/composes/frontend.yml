@@ -1,6 +1,12 @@
 version: "2"
 services:
 
+  frontend:
+    ports:
+      - "3000:80"
+    links:
+      - "m-backend:docker.backend"
+
   # Backend DJANGO service
   m-backend:
     links:
@@ -19,6 +25,10 @@ services:
       - "redis:docker.celery.backend"
     environment:
       - MODE=frontend
+
+  router:
+    ports:
+      - "8080:8080"
 
   postgres:
     ports:

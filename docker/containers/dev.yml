@@ -5,31 +5,21 @@ services:
   frontend:
     container_name: frontend
     image: frontend
-    build:
-      context: ../../
-      dockerfile: ./docker/dev/frontend/Dockerfile
-    ports:
-      - "3000:80"
     volumes:
-      - ../../services/frontend/app:/opt/deluge/services/frontend/app
-      - ../../services/frontend/internals:/opt/deluge/services/frontend/internals
-      - ../../services/frontend/server:/opt/deluge/services/frontend/server
-      - ../../services/frontend/package.json:/opt/deluge/services/frontend/package.json
-      - ../../services/frontend/.gitignore:/opt/deluge/services/frontend/.gitignore
-    links:
-      - "m-backend:docker.backend"
+      - ${DELUGE_PATH}/services/frontend/app:/opt/deluge/services/frontend/app
+      - ${DELUGE_PATH}/services/frontend/internals:/opt/deluge/services/frontend/internals
+      - ${DELUGE_PATH}/services/frontend/server:/opt/deluge/services/frontend/server
+      - ${DELUGE_PATH}/services/frontend/package.json:/opt/deluge/services/frontend/package.json
+      - ${DELUGE_PATH}/services/frontend/.gitignore:/opt/deluge/services/frontend/.gitignore
     command: ["run", "start"]
 
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
   base-backend:
     image: base-backend
-    build:
-      context: ../..
-      dockerfile: ./docker/dev/base-backend/Dockerfile
     volumes:
-      - ../../services/backend/src:/opt/deluge/services/backend/src
-      - ../../services/backend/libs/:/opt/deluge/services/backend/libs/
+      - ${DELUGE_PATH}/services/backend/src:/opt/deluge/services/backend/src
+      - ${DELUGE_PATH}/services/backend/libs/:/opt/deluge/services/backend/libs/
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -63,16 +53,13 @@ services:
 # ======================================================================================================================
   base-ethwallet:
     image: base-ethwallet
-    build:
-      context: ../..
-      dockerfile: ./docker/dev/base-ethwallet/Dockerfile
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - AUTH=False
     volumes:
-      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
-      - ../../services/ethwallet/:/opt/deluge/services/ethwallet/
+      - ${DELUGE_PATH}/services/backend/libs/core:/opt/deluge/services/backend/libs/core
+      - ${DELUGE_PATH}/services/ethwallet/:/opt/deluge/services/ethwallet/
 
   # Ethereum wallet backend DJANGO service
   m-ethwallet:
@@ -96,21 +83,13 @@ services:
   router:
     container_name: router
     image: router
-    build:
-      context: ../..
-      dockerfile: ./docker/general/router/Dockerfile
     volumes:
-      - ../../services/router/.crossbar/config.json:/opt/deluge/services/router/.crossbar/config.json
-    ports:
-      - "8080:8080"
+      - ${DELUGE_PATH}/services/router/.crossbar/config.json:/opt/deluge/services/router/.crossbar/config.json
 
 # ======================================================================================================================
   ethnode:
     container_name: ethnode
     image: ethnode
-    build:
-      context: ../..
-      dockerfile: ./docker/general/ethnode/Dockerfile
 
 # ======================================================================================================================
   postgres:
@@ -145,8 +124,8 @@ services:
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
     volumes:
-      - ../../services/backend/src:/opt/deluge/services/backend/src
-      - ../../services/backend/libs/core:/opt/deluge/services/backend/libs/core
+      - ${DELUGE_PATH}/services/backend/src:/opt/deluge/services/backend/src
+      - ${DELUGE_PATH}/services/backend/libs/core:/opt/deluge/services/backend/libs/core
     command: ["flower", "-A" , "absortium.celery.app", "--address=0.0.0.0", "--port=5555", "--broker=amqp://guest@docker.celery.broker"]
 
 # ======================================================================================================================

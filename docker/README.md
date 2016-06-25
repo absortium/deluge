@@ -1,11 +1,12 @@
-* Docker containers are divided on two types:
+* Docker containers are divided on three types:
     * dev - containers are created for development:
         * work directories are mounted in order to have fast code update.
         * libraries `core` and `ethwallet` are installed in development mode.
     * prod - containers are created for production:
         * work directories are copied from the source directory rather than mounted, like in dev mode.
         * libraries `core` and `ethwallet` are installed in normal mode.
-    
+    * general - containers which are identical for both dev and prod
+        
 * Docker compose files are divided on four types:
     * unit tests:
         * external systems like `coinbase` and `ethwallet` are mocked.
@@ -31,4 +32,5 @@
         * `ethwallet` working in the real net, creating real addresses and transfer real money.
         * all necessary containers are up.
 
-        
+
+In order to to init your mode - compose file, type in shell `dcinit <frontend|unit|integration|testnet|realnet>`, containers type will be detected automatically.

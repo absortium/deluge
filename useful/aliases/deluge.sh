@@ -63,3 +63,11 @@ func_streamcopy() {
     docker-machine ssh default "sudo -u root tar czpf - -C $1 . " | pipemeter |tar xzpf - -C $2
 }
 alias dmstreamcopy=func_streamcopy
+
+# stream copying folder/file from the docker machine
+# Example: dmstreamcopy /mnt/sda1/var/lib/docker/volumes/dev_ethereumdata/_data ~/Downloads/blockchaindata/
+func_dprodbuild() {
+    func_godd
+
+}
+alias dmstreamcopy=func_streamcopy

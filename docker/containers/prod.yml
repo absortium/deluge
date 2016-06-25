@@ -4,23 +4,13 @@ services:
 # ======================================================================================================================
   frontend:
     container_name: frontend
-    image: frontend
-    build:
-      context: ../../
-      dockerfile: ./docker/prod/frontend/Dockerfile
-    ports:
-      - "80:80"
-    links:
-      - "m-backend:docker.backend"
+    image: absortium/frontend:latest
     command: ["run", "start:prod"]
 
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
   base-backend:
-    image: base-backend
-    build:
-      context: ../..
-      dockerfile: ./docker/prod/base-backend/Dockerfile
+    image: absortium/base-backend:latest
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -53,10 +43,7 @@ services:
 
 # ======================================================================================================================
   base-ethwallet:
-    image: base-ethwallet
-    build:
-      context: ../..
-      dockerfile: ./docker/prod/base-ethwallet/Dockerfile
+    image: absortium/base-ethwallet:latest
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -81,21 +68,15 @@ services:
 
 # ======================================================================================================================
   router:
-    container_name: router
+    container_name: absortium/router:latest
     image: router
-    build:
-      context: ../..
-      dockerfile: ./docker/general/router/Dockerfile
     ports:
       - "8080:8080"
 
 # ======================================================================================================================
   ethnode:
     container_name: ethnode
-    image: ethnode
-    build:
-      context: ../..
-      dockerfile: ./docker/general/ethnode/Dockerfile
+    image: absortium/ethnode:latest
 
 # ======================================================================================================================
   postgres:

@@ -5,48 +5,52 @@
 
 
 func_dcinit() {
-    declare DELUGE_MODE="$1"
+    declare COMPOSE_MODE="$1"
 
-    if [ -z "$DELUGE_MODE" ]; then
+    if [ -z "$COMPOSE_MODE" ]; then
         echo "Use default init mode '$DEFAULT_MODE'"
-        DELUGE_MODE="$DEFAULT_MODE"
+        COMPOSE_MODE="$DEFAULT_MODE"
     fi
     
-    case "$DELUGE_MODE" in
-    'unit' )
-        export DOCKER_OVERRIDE="unit.yml"
-        export DOCKER_BASE="base-dev.yml";;
+    case "$COMPOSE_MODE" in
+    'unit'|'integration'|'frontend')
+        export CONTAINERS_TYPE="dev";;
 
-    'integration' )
-        export DOCKER_OVERRIDE="integration.yml"
-        export DOCKER_BASE="base-dev.yml";;
-    'testnet' )
-        export DOCKER_OVERRIDE="testnet.yml"
-        export DOCKER_BASE="base-prod.yml";;
+    'testnet'|'realnet' )
+        export CONTAINERS_TYPE="prod";;
 
-    'frontend' )
-        export DOCKER_OVERRIDE="frontend.yml"
-        export DOCKER_BASE="base-dev.yml";;
     *)
         echo "Can not find any options similar to '$1'"
+        break
     esac
+
+    declare COMPOSES_PATH="$DELUGE_PATH/docker/composes"
+    declare CONTAINERS_PATH="$DELUGE_PATH/docker/containers"
+
+    export DOCKER_OVERRIDE="$COMPOSES_PATH/$COMPOSE_MODE.yml"
+    export DOCKER_BASE="$CONTAINERS_PATH/$CONTAINERS_TYPE.yml"
+
+    ideluge
 }
 alias dcinit=func_dcinit
 
-# docker-compose alias
 func_dc() {
     if [[ -z "$DOCKER_OVERRIDE" || -z "$DOCKER_BASE" ]]
     then
         func_dcinit
     fi
 
-    # Go the docker directory
-    godd
+    declare COMMAND=$(echo "$@" | python -c "import sys; print(sys.stdin.read().split(' ')[0])")
 
-    echo "Docker base file: $DOCKER_BASE"
-    echo "Docker override file: $DOCKER_OVERRIDE"
-    echo "Full command: docker-compose -f $DOCKER_BASE -f $DOCKER_OVERRIDE $@"
-    docker-compose -f "$DOCKER_BASE" -f "$DOCKER_OVERRIDE" "$@"
+    if [ "$COMMAND" = "build" ]; then
+        docker-compose -f "$DELUGE_PATH/docker/build.yml" "$@"
+    else
+        echo "Docker base file: $DOCKER_BASE"
+        echo "Docker override file: $DOCKER_OVERRIDE"
+        echo "Full command: docker-compose -f $DOCKER_BASE -f $DOCKER_OVERRIDE $@"
+
+        docker-compose -f "$DOCKER_BASE" -f "$DOCKER_OVERRIDE" "$@"
+    fi
 }
 alias dc=func_dc
 

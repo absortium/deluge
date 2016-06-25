@@ -9,7 +9,8 @@ WORKDIR "$DOCKER_PROJECT_PATH/$APP_PATH"
 
 COPY "$APP_PATH" "."
 
-RUN npm run preinstall && npm install && npm run postinstall && npm run build && npm prune --production
+RUN npm run preinstall && npm install && npm run postinstall
+RUN apt-get purge && apt-get clean
 
 ENTRYPOINT ["npm"]
 CMD ["-l"]

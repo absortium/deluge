@@ -1,6 +1,12 @@
 version: "2"
 services:
 
+  frontend:
+    ports:
+      - "80:80"
+    links:
+      - "m-backend:docker.backend"
+
   # Backend DJANGO service
   m-backend:
     links:
@@ -41,10 +47,6 @@ services:
       - "redis:docker.celery.backend"
       - "ethnode:docker.ethnode"
 
-  postgres:
-    ports:
-      - "5432:5432"
-
   ethnode:
     ports:
       - "8545:8545"
@@ -62,7 +64,7 @@ services:
     ]
 
   redis:
-      ports:
+    ports:
       - "6379:6379"
 
 volumes:
