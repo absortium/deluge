@@ -50,13 +50,11 @@ services:
   ethnode:
     ports:
       - "8545:8545"
-    volumes:
-      - ethtestnet:/opt/deluge/services/ethnode/
+    entrypoint: ["geth"]
     command: [
-      "geth",
-      "--testnet",
       "--fast",
       "--datadir", ".",
+      "--testnet",
       "--rpc",
       "--rpcapi", "personal,db,eth",
       "--rpcaddr" ,"0.0.0.0",
@@ -66,7 +64,3 @@ services:
   redis:
     ports:
       - "6379:6379"
-
-volumes:
-  ethtestnet:
-    driver: local

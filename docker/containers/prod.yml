@@ -42,7 +42,7 @@ services:
     command: ["-A" , "absortium.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
   # Backend DJANGO migration service
-  migrate-backend:
+  manage-backend:
     extends: base-backend
     container_name: m-backend
     links:
@@ -52,7 +52,7 @@ services:
       - AUTH0_API_KEY=${AUTH0_API_KEY}
       - WHOAMI=DJANGO
     entrypoint: ["python", "-u", "manage.py"]
-    command: ["migrate"]
+    command: ["--help"]
 
 # ======================================================================================================================
   base-ethwallet:
@@ -80,15 +80,16 @@ services:
     command: ["-A" , "ethwallet.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
   # Ethereum wallet DJANGO migration service
-  migrate-ethwallet:
+  manage-ethwallet:
     extends: base-ethwallet
     container_name: m-ethwallet
     environment:
       - WHOAMI=DJANGO
     links:
       - "postgres:docker.postgres"
+      - "ethnode:docker.ethnode"
     entrypoint: ["python", "-u", "manage.py"]
-    command: ["migrate"]
+    command: ["--help"]
 
 # ======================================================================================================================
   router:
@@ -101,6 +102,8 @@ services:
   ethnode:
     container_name: ethnode
     image: absortium/ethnode:latest
+    volumes:
+      - "ethtestnet:/opt/deluge/services/ethnode/"
 
 # ======================================================================================================================
   postgres:
@@ -121,4 +124,6 @@ services:
 
 volumes:
   dbdata:
+    driver: local
+  ethtestnet:
     driver: local

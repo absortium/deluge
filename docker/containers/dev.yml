@@ -87,11 +87,6 @@ services:
       - ${DELUGE_PATH}/services/router/.crossbar/config.json:/opt/deluge/services/router/.crossbar/config.json
 
 # ======================================================================================================================
-  ethnode:
-    container_name: ethnode
-    image: ethnode
-
-# ======================================================================================================================
   postgres:
     container_name: postgres
     image: postgres
