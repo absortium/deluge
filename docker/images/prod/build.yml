@@ -4,16 +4,16 @@ services:
     image: absortium/frontend:latest
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/prod/frontend/Dockerfile
+      dockerfile: ./docker/images/prod/frontend/Dockerfile
 
   backend:
     image: absortium/backend:latest
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/prod/backend/Dockerfile
+      dockerfile: ./docker/images/prod/backend/Dockerfile
 
   ethwallet:
     image: absortium/ethwallet:latest
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/prod/ethwallet/Dockerfile
+      dockerfile: ./docker/images/prod/ethwallet/Dockerfile

@@ -14,10 +14,10 @@ func_dcinit() {
     
     case "$COMPOSE_MODE" in
     'unit'|'integration'|'frontend')
-        export CONTAINERS_TYPE="dev";;
+        export IMAGE_TYPE="dev";;
 
     'testnet'|'realnet' )
-        export CONTAINERS_TYPE="prod";;
+        export IMAGE_TYPE="prod";;
 
     *)
         echo "Can not find any options similar to '$1'"
@@ -28,7 +28,7 @@ func_dcinit() {
     declare CONTAINERS_PATH="$DELUGE_PATH/docker/containers"
 
     export DOCKER_OVERRIDE="$COMPOSES_PATH/$COMPOSE_MODE.yml"
-    export DOCKER_BASE="$CONTAINERS_PATH/$CONTAINERS_TYPE.yml"
+    export DOCKER_BASE="$CONTAINERS_PATH/$IMAGE_TYPE.yml"
 
     ideluge
 }
@@ -44,8 +44,8 @@ func_dc() {
 
     if [ "$COMMAND" = "build" ]; then
 
-        docker-compose -f "$DELUGE_PATH/docker/containers/base/build.yml" \
-                       -f "$DELUGE_PATH/docker/containers/$CONTAINERS_TYPE/build.yml" \
+        docker-compose -f "$DELUGE_PATH/docker/images/base/build.yml" \
+                       -f "$DELUGE_PATH/docker/images/$IMAGE_TYPE/build.yml" \
                           "$@"
     else
         echo "Docker base file: $DOCKER_BASE"

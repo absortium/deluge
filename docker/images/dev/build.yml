@@ -7,10 +7,10 @@ services:
     image: backend
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/dev/backend/Dockerfile
+      dockerfile: ./docker/images/dev/backend/Dockerfile
 
   ethwallet:
     image: ethwallet
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/dev/ethwallet/Dockerfile
+      dockerfile: ./docker/images/dev/ethwallet/Dockerfile
