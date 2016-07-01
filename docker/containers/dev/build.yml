@@ -1,33 +1,16 @@
 version: "2"
 services:
-
   frontend:
-    image: frontend
-    build:
-      context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/dev/frontend/Dockerfile
+    image: absortium/base-frontend:latest
 
-  base-backend:
-    image: base-backend
+  backend:
+    image: backend
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/dev/base-backend/Dockerfile
+      dockerfile: ./docker/containers/dev/backend/Dockerfile
 
-  base-ethwallet:
-    image: base-ethwallet
+  ethwallet:
+    image: ethwallet
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/dev/base-ethwallet/Dockerfile
-
-  router:
-    container_name: router
-    image: router
-    build:
-      context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/general/router/Dockerfile
-
-  ethnode:
-    image: ethnode
-    build:
-      context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/general/ethnode/Dockerfile
+      dockerfile: ./docker/containers/dev/ethwallet/Dockerfile

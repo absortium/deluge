@@ -4,13 +4,14 @@ services:
 # ======================================================================================================================
   frontend:
     container_name: frontend
-    image: absortium/frontend
+    image: absortium/frontend:latest
+    entrypoint: ["npm"]
     command: ["run", "start:prod"]
 
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
-  base-backend:
-    image: absortium/base-backend
+  backend:
+    image: absortium/backend:latest
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -19,7 +20,7 @@ services:
 
   # Backend DJANGO service
   m-backend:
-    extends: base-backend
+    extends: backend
     container_name: m-backend
     environment:
       - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
@@ -30,7 +31,7 @@ services:
 
   # Celery worker
   w-backend:
-    extends: base-backend
+    extends: backend
     container_name: w-backend
     environment:
       - COINBASE_API_KEY=${COINBASE_API_KEY}
@@ -43,7 +44,7 @@ services:
 
   # Backend DJANGO migration service
   manage-backend:
-    extends: base-backend
+    extends: backend
     container_name: m-backend
     links:
       - "postgres:docker.postgres"
@@ -55,15 +56,15 @@ services:
     command: ["--help"]
 
 # ======================================================================================================================
-  base-ethwallet:
-    image: absortium/base-ethwallet
+  ethwallet:
+    image: absortium/ethwallet:latest
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   # Ethereum wallet backend DJANGO service
   m-ethwallet:
-    extends: base-ethwallet
+    extends: ethwallet
     container_name: m-ethwallet
     environment:
       - WHOAMI=DJANGO
@@ -72,7 +73,7 @@ services:
 
   # Ethereum wallet celery worker
   w-ethwallet:
-    extends: base-ethwallet
+    extends: ethwallet
     container_name: w-ethwallet
     environment:
       - WHOAMI=CELERY
@@ -81,7 +82,7 @@ services:
 
   # Ethereum wallet DJANGO migration service
   manage-ethwallet:
-    extends: base-ethwallet
+    extends: ethwallet
     container_name: m-ethwallet
     environment:
       - WHOAMI=DJANGO

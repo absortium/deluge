@@ -1,0 +1,31 @@
+version: "2"
+services:
+  base-frontend:
+    image: absortium/base-frontend:latest
+    build:
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/containers/general/base-frontend/Dockerfile
+
+  base-backend:
+    image: absortium/base-backend:latest
+    build:
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/containers/general/base-backend/Dockerfile
+
+  base-ethwallet:
+    image: absortium/base-ethwallet:latest
+    build:
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/containers/general/base-ethwallet/Dockerfile
+
+  router:
+    image: absortium/router:latest
+    build:
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/containers/general/router/Dockerfile
+
+  ethnode:
+    image: absortium/ethnode:latest
+    build:
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/containers/general/ethnode/Dockerfile

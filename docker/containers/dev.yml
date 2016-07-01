@@ -4,19 +4,20 @@ services:
 # ======================================================================================================================
   frontend:
     container_name: frontend
-    image: frontend
+    image: absortium/base-frontend:latest
     volumes:
       - ${DELUGE_PATH}/services/frontend/app:/opt/deluge/services/frontend/app
       - ${DELUGE_PATH}/services/frontend/internals:/opt/deluge/services/frontend/internals
       - ${DELUGE_PATH}/services/frontend/server:/opt/deluge/services/frontend/server
       - ${DELUGE_PATH}/services/frontend/package.json:/opt/deluge/services/frontend/package.json
       - ${DELUGE_PATH}/services/frontend/.gitignore:/opt/deluge/services/frontend/.gitignore
+    entrypoint: ["npm"]
     command: ["run", "start"]
 
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
-  base-backend:
-    image: base-backend
+  backend:
+    image: backend
     volumes:
       - ${DELUGE_PATH}/services/backend/src:/opt/deluge/services/backend/src
       - ${DELUGE_PATH}/services/backend/libs/:/opt/deluge/services/backend/libs/
@@ -28,18 +29,18 @@ services:
 
   # Backend DJANGO service
   m-backend:
-    extends: base-backend
+    extends: backend
     container_name: m-backend
     environment:
       - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
       - AUTH0_API_KEY=${AUTH0_API_KEY}
       - WHOAMI=DJANGO
-    entrypoint: ["python3", "-u", "manage.py"]
+    entrypoint: ["python3", "manage.py"]
     command: ["runserver" , "0.0.0.0:3000"]
 
   # Celery worker
   w-backend:
-    extends: base-backend
+    extends: backend
     container_name: w-backend
     environment:
       - COINBASE_API_KEY=${COINBASE_API_KEY}
@@ -51,8 +52,8 @@ services:
     command: ["-A" , "absortium.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
 # ======================================================================================================================
-  base-ethwallet:
-    image: base-ethwallet
+  ethwallet:
+    image: ethwallet
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -63,28 +64,46 @@ services:
 
   # Ethereum wallet backend DJANGO service
   m-ethwallet:
-    extends: base-ethwallet
+    extends: ethwallet
     container_name: m-ethwallet
     environment:
       - WHOAMI=DJANGO
-    entrypoint: ["python3", "-u", "manage.py"]
+    entrypoint: ["python3", "manage.py"]
     command: ["runserver", "0.0.0.0:3000"]
 
   # Ethereum wallet celery worker
   w-ethwallet:
-    extends: base-ethwallet
+    extends: ethwallet
     container_name: w-ethwallet
     environment:
       - WHOAMI=CELERY
     entrypoint: ["celery"]
     command: ["-A" , "ethwallet.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
+  # ======================================================================================================================
+  notifier:
+    extends: backend
+    container_name: notifier
+    links:
+      - "postgres:docker.postgres"
+      - "m-backend:docker.backend"
+
+    environment:
+      - WHOAMI=NOTIFIER
+    entrypoint: ["python3"]
+    command: ["manage.py", "mocknotifier"]
+
 # ======================================================================================================================
   router:
     container_name: router
-    image: router
+    image: absortium/router:latest
     volumes:
       - ${DELUGE_PATH}/services/router/.crossbar/config.json:/opt/deluge/services/router/.crossbar/config.json
+
+# ======================================================================================================================
+  ethnode:
+    container_name: ethnode
+    image: absortium/ethnode:latest
 
 # ======================================================================================================================
   postgres:

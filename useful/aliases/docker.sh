@@ -62,9 +62,9 @@ alias flushdb=func_flushdb
 func_pdbconnect() {
     echo "Command: $@"
     if [ -z "$@" ]; then
-        psql -h absortium.com  -p 5432 -U postgres
+        psql -h dev.absortium.com  -p 5432 -U postgres
     else
-        psql -h absortium.com  -p 5432 -U postgres -c "$@"
+        psql -h dev.absortium.com  -p 5432 -U postgres -c "$@"
     fi
 }
 alias pdbconnect=func_pdbconnect

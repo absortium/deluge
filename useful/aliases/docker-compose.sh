@@ -43,7 +43,10 @@ func_dc() {
     declare COMMAND=$(echo "$@" | python -c "import sys; print(sys.stdin.read().split(' ')[0])")
 
     if [ "$COMMAND" = "build" ]; then
-        docker-compose -f "$DELUGE_PATH/docker/containers/$CONTAINERS_TYPE/build.yml" "$@"
+
+        docker-compose -f "$DELUGE_PATH/docker/containers/general/build.yml" \
+                       -f "$DELUGE_PATH/docker/containers/$CONTAINERS_TYPE/build.yml" \
+                          "$@"
     else
         echo "Docker base file: $DOCKER_BASE"
         echo "Docker override file: $DOCKER_OVERRIDE"

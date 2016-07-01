@@ -1,15 +1,6 @@
-FROM node:latest
-MAINTAINER Andrey Samokhvalov (andrew.shvv@gmail.com)
-
-ENV APP_PATH  "services/frontend"
-ENV DOCKER_PROJECT_PATH  "/opt/deluge"
-
-# Install dependencies
-WORKDIR "$DOCKER_PROJECT_PATH/$APP_PATH"
+FROM absortium/base-frontend
 
 COPY "$APP_PATH" "."
 
-RUN npm run preinstall && npm install && npm run build && npm prune --production
-
-ENTRYPOINT ["npm"]
-CMD ["-l"]
+RUN npm prune --production
+RUN apt-get purge && apt-get clean

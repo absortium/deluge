@@ -46,7 +46,7 @@ cleancrossbar() {
 
 # Watch for django test database in realtime
 func_watchpsql() {
-    watch -n 0.2 "psql -h absortium.com -p 5432 -U postgres -d test_postgres -c '$1'"
+    watch -n 0.2 "psql -h dev.absortium.com -p 5432 -U postgres -d test_postgres -c '$1'"
 }
 alias watchpsql=func_watchpsql
 
