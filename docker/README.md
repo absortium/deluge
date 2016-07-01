@@ -4,13 +4,14 @@ file like `(integration|frontend|testnet...etc).yml` determines how containers a
 For example: In `unit` mode all systems are mocked and the only thing that we need it `postgres` and the service itself.
 
 * Docker containers are divided on three types:
-    * dev - containers are created for development:
+    * `dev` - images are created for development:
         * work directories are mounted in order to have fast code update.
         * libraries `core` and `ethwallet` are installed in development mode in order to have fast code update.
-    * prod - containers are created for production:
+    * `prod` - images are created for production:
         * work directories are copied from the source directory rather than mounted.
         * libraries `core` and `ethwallet` are installed not in development mode.
-    * general - containers which are identical for both dev and prod.
+        * installed additionals libraries like `gunicorn` in `backend` service and all unnecessary libraries in `fronted` service are pruned.
+    * `base` - images which serve as base for dev and prod.
         
 * Docker compose files are divided on four types:
     * `unit`:

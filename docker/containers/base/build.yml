@@ -4,28 +4,28 @@ services:
     image: absortium/base-frontend:latest
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/general/base-frontend/Dockerfile
+      dockerfile: ./docker/containers/base/base-frontend/Dockerfile
 
   base-backend:
     image: absortium/base-backend:latest
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/general/base-backend/Dockerfile
+      dockerfile: ./docker/containers/base/base-backend/Dockerfile
 
   base-ethwallet:
     image: absortium/base-ethwallet:latest
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/general/base-ethwallet/Dockerfile
+      dockerfile: ./docker/containers/base/base-ethwallet/Dockerfile
 
   router:
     image: absortium/router:latest
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/general/router/Dockerfile
+      dockerfile: ./docker/containers/base/router/Dockerfile
 
   ethnode:
     image: absortium/ethnode:latest
     build:
       context: ${DELUGE_PATH}
-      dockerfile: ./docker/containers/general/ethnode/Dockerfile
+      dockerfile: ./docker/containers/base/ethnode/Dockerfile

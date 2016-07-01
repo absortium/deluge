@@ -44,7 +44,7 @@ func_dc() {
 
     if [ "$COMMAND" = "build" ]; then
 
-        docker-compose -f "$DELUGE_PATH/docker/containers/general/build.yml" \
+        docker-compose -f "$DELUGE_PATH/docker/containers/base/build.yml" \
                        -f "$DELUGE_PATH/docker/containers/$CONTAINERS_TYPE/build.yml" \
                           "$@"
     else
