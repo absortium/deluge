@@ -24,27 +24,31 @@ alias drun="docker run -i -t -P"
 # Execute command in container, e.g., $dex base /bin/bash
 alias dex="docker exec -i -t"
 
-func_dstop() { docker stop $(docker ps -a -q); }
 # Stop all containers
+func_dstop() { docker stop $(docker ps -a -q); }
 alias dstop=func_dstop
 
-func_drmc() { docker ps -a | egrep "$1" | grep -v "CONTAINER" | awk '{ printf "%s\n", $1}' | xargs docker rm -f; }
 # Stop and Remove are chosen containers
 # drmc "postgres" - delete postgres container
 # drmc ".*" - delete all containers
+func_drmc() { docker ps -a | egrep "$1" | grep -v "CONTAINER" | awk '{ printf "%s\n", $1}' | xargs docker rm -f; }
 alias drmc=func_drmc
 
+# Delete docker volumes
+func_drmd() { docker volume ls | egrep "$1" | awk '{ printf "%s\n", $2}' | xargs docker volume rm; }
+alias drmd=func_drmd
+
+# Remove chosen images
+# drmi "postgres" - delete postgres image
+# drmi ".*" - delete all images
 func_drmi() {
     func_drmc "$1"
     docker images -a | egrep "$1" | grep -v "IMAGE" | awk '{ printf "%s\n", $3}' | xargs docker rmi -f;
 }
-# Remove are chosen images
-# drmi "postgres" - delete postgres image
-# drmi ".*" - delete all images
 alias drmi=func_drmi
 
 func_dbu() { docker build -t=$1 .; }
-# Dockerfile build, e.g., $dbu tcnksm/test 
+# Dockerfile build, e.g., $dbu tcnksm/test
 alias dbu=func_dbu
 
 func_flushdb() {
