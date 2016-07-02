@@ -25,10 +25,10 @@ func_dcinit() {
     esac
 
     declare COMPOSES_PATH="$DELUGE_PATH/docker/composes"
-    declare CONTAINERS_PATH="$DELUGE_PATH/docker/containers"
+    declare IMAGES_PATH="$DELUGE_PATH/docker/images"
 
     export DOCKER_OVERRIDE="$COMPOSES_PATH/$COMPOSE_MODE.yml"
-    export DOCKER_BASE="$CONTAINERS_PATH/$IMAGE_TYPE.yml"
+    export DOCKER_BASE="$IMAGES_PATH/$IMAGE_TYPE.yml"
 
     ideluge
 }
