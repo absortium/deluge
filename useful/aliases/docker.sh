@@ -47,10 +47,6 @@ func_drmi() {
 }
 alias drmi=func_drmi
 
-func_dbu() { docker build -t=$1 .; }
-# Dockerfile build, e.g., $dbu tcnksm/test
-alias dbu=func_dbu
-
 func_flushdb() {
     drmc ".*" 
     docker volume rm dev_dbdata

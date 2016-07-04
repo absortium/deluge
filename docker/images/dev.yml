@@ -51,6 +51,17 @@ services:
     entrypoint: ["celery"]
     command: ["-A" , "absortium.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
+  # Poloniex sync
+  poloniexsync:
+    extends: backend
+    container_name: poloniexsync
+    environment:
+      - POLONIEX_API_SECRET=${POLONIEX_API_SECRET}
+      - POLONIEX_API_KEY=${POLONIEX_API_KEY}
+      - WHOAMI=DJANGO
+    entrypoint: ["python3", "manage.py"]
+    command: ["poloniexsync"]
+
 # ======================================================================================================================
   ethwallet:
     image: ethwallet

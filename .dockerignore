@@ -17,3 +17,5 @@ services/frontend/*.md
 
 services/ethwallet/celerybeat-*
 docker/images/dev/ethnode/ethhash/*
+
+.sensitive
