@@ -26,6 +26,11 @@ services:
     environment:
       - MODE=frontend
 
+  poloniexsync:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+
   router:
     ports:
       - "8080:8080"

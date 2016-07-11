@@ -35,7 +35,7 @@ func_drmc() { docker ps -a | egrep "$1" | grep -v "CONTAINER" | awk '{ printf "%
 alias drmc=func_drmc
 
 # Delete docker volumes
-func_drmd() { docker volume ls | egrep "$1" | awk '{ printf "%s\n", $2}' | xargs docker volume rm; }
+func_drmd() { docker volume ls | egrep "$1" | grep -v "VOLUME" |awk '{ printf "%s\n", $2}' | xargs docker volume rm; }
 alias drmd=func_drmd
 
 # Remove chosen images
@@ -49,7 +49,7 @@ alias drmi=func_drmi
 
 func_flushdb() {
     drmc ".*" 
-    docker volume rm dev_dbdata
+    drmd images_dbdata
     dc up -d postgres
     sleep 4
     dc run m-backend migrate

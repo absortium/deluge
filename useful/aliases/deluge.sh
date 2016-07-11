@@ -43,7 +43,6 @@ cleancrossbar() {
     rm "$DELUGE_PATH/services/router/.crossbar/node.pid"
 }
 
-
 # Watch for django test database in realtime
 func_watchpsql() {
     watch -n 0.2 "psql -h dev.absortium.com -p 5432 -U postgres -d test_postgres -c '$1'"
