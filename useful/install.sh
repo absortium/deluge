@@ -9,7 +9,6 @@ export DELUGE_PATH="$PWD"
 
 # For simplicity I prefer use aliases which I developed for this project, on first sign it might look overwhelming, but
 # I think it may significantly help for developing.
-
 echo "Step #0: Install aliases."
 for f in $DELUGE_PATH/useful/aliases/*; do
   source "$f"
@@ -27,8 +26,5 @@ dc build base-backend
 echo "Step #4: Build 'backend' service."
 dc build backend
 
-echo "Step #5  Migrate database."
-dc run m-backend migrate
-
-echo "Step #6: Install frontend and run tests"
-dc run frontend run test
+echo "Step #5: Install frontend and run tests."
+dc run m-backend test --verbosity 2 absortium.tests.unit
