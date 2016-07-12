@@ -10,10 +10,10 @@ print () {
 }
 
 declare SERVICE="$1"
-print "SERVICE=$SERVICE"
+echo "SERVICE=$SERVICE"
 
-declare DELUGE_PATH="$PWD"
-print "DELUGE_PATH=$DELUGE_PATH"
+export DELUGE_PATH="$PWD"
+echo "DELUGE_PATH=$DELUGE_PATH"
 
 print "Step #0: Install aliases."
 for f in $DELUGE_PATH/useful/aliases/*; do
