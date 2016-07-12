@@ -26,7 +26,6 @@ alias god=func_god
 
 # Go to the deluge docker directory
 func_godd() {
-    ideluge
     func_god "/docker" $@
 }
 alias godd=func_godd
