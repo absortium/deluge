@@ -121,7 +121,7 @@ services:
     container_name: postgres
     image: postgres
     volumes:
-      - "dbdata:/var/lib/postgresql/data"
+      - "dev_dbdata:/var/lib/postgresql/data"
 
 # ======================================================================================================================
   redis:
@@ -166,5 +166,5 @@ services:
      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro}
 
 volumes:
-  dbdata:
+  dev_dbdata:
     driver: local

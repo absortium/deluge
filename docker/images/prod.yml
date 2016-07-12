@@ -104,14 +104,14 @@ services:
     container_name: ethnode
     image: absortium/ethnode:latest
     volumes:
-      - "ethtestnet:/opt/deluge/services/ethnode/"
+      - "prod_ethtestnet:/opt/deluge/services/ethnode/"
 
 # ======================================================================================================================
   postgres:
     container_name: postgres
     image: postgres
     volumes:
-      - "dbdata:/var/lib/postgresql/data"
+      - "prod_dbdata:/var/lib/postgresql/data"
 
 # ======================================================================================================================
   redis:
@@ -124,7 +124,7 @@ services:
     image: rabbitmq
 
 volumes:
-  dbdata:
+  prod_dbdata:
     driver: local
-  ethtestnet:
+  prod_ethtestnet:
     driver: local
