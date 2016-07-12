@@ -2,41 +2,33 @@
 
 set -ev
 
-declare TRAVIS_REPO_SLUG="$1"
-declare TRAVIS_BRANCH="$2"
-declare REPOSITORY=$(echo "$TRAVIS_REPO_SLUG" | python -c "import sys; print(sys.stdin.read().split()[1])")
-
-echo "$TRAVIS_REPO_SLUG"
-echo "$TRAVIS_BRANCH"
-echo "$REPOSITORY"
-
-git clone --recursive https://github.com/absortium/deluge.git
-cd deluge
+declare SERVICE="$1"
+echo "$SERVICE"
 
 export DELUGE_PATH="$PWD"
 
 # For simplicity I prefer use aliases which I developed for this project, on first sign it might look overwhelming, but
 # I think it may significantly help for developing.
+
+echo "Step #0: Install aliases."
 for f in $DELUGE_PATH/useful/aliases/*; do
   source "$f"
 done
 
-gods "$REPOSITORY"; git checkout "$TRAVIS_BRANCH"
+echo "Step #1: Turn on 'unit' mode (is using for testing)."
+dcinit unit
 
-# Turn on 'unit' mode (is using for testing)
-echo "dcinit unit"
+echo "Step #2: Install and run 'postgres' service."
+dc up -d postgres
 
-# Install and run `postgres` service.
-echo "dc up -d postgres"
+echo "Step #3: Build 'base-backend' service."
+dc build base-backend
 
-# Build `base-backend` service.
-echo "dc build base-backend"
+echo "Step #4: Build 'backend' service."
+dc build backend
 
-# Build `backend` service.
-echo "dc build backend"
+echo "Step #5  Migrate database."
+dc run m-backend migrate
 
-# Migrate database.
-echo "dc run m-backend migrate"
-
-# Install frontend and run tests
-echo "dc run frontend run test"
+echo "Step #6: Install frontend and run tests"
+dc run frontend run test
