@@ -3,18 +3,18 @@
 set -e
 shopt -s expand_aliases
 
-declare SERVICE="$1"
-
 declare GREEN='\033[0;32m'
 declare NC='\033[0m'
 print () {
     echo -e "${GREEN}$1${NC}"
 }
 
-export DELUGE_PATH="$PWD"
+declare SERVICE="$1"
+print "SERVICE=$SERVICE"
 
-# For simplicity I prefer use aliases which I developed for this project, on first sign it might look overwhelming, but
-# I think it may significantly help for developing.
+declare DELUGE_PATH="$PWD"
+print "DELUGE_PATH=$DELUGE_PATH"
+
 print "Step #0: Install aliases."
 for f in $DELUGE_PATH/useful/aliases/*; do
     echo  "Install aliases from: $f"
