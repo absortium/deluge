@@ -63,7 +63,7 @@ case "$SERVICE" in
         dc build ethwallet
 
         print "Step #5: Create 'ethwallet' database."
-        dex postgres psql -c "CREATE DATABASE ethwallet" -U postgres
+        dex postgres psql -c "CREATE DATABASE IF NOT EXISTS ethwallet" -U postgres
 
         print "Step #6: Migrate database."
         dc run m-ethwallet migrate
