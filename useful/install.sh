@@ -18,6 +18,12 @@ if [ -z $BRANCH ]; then
 fi
 echo "BRANCH=$BRANCH"
 
+declare TRAVIS="$3"
+if [ -z $TRAVIS ]; then
+    TRAVIS="false"
+fi
+echo "TRAVIS=$TRAVIS"
+
 export DELUGE_PATH="$PWD"
 echo "DELUGE_PATH=$DELUGE_PATH"
 
@@ -38,8 +44,12 @@ popd
 
 case "$SERVICE" in
     'frontend' )
-        print "Step #2: Build 'base-frontend' service."
-        dc build base-frontend
+        if [ "$TRAVIS" == "true" ]; then
+            print "Step #2: Build 'base-frontend' service."
+            dc build base-frontend
+        else
+            print "Step #2: Skip build 'base-frontend' service, it will be downloaded from docker hub on Step #3."
+        fi
 
         print "Step #3: Install frontend and run tests."
         dc run frontend run test
@@ -50,8 +60,13 @@ case "$SERVICE" in
         print "Step #2: Install and run 'postgres' service."
         dc up -d postgres
 
-        print "Step #3: Build 'base-backend' service."
-        dc build base-backend
+        if [ "$TRAVIS" == "true" ]; then
+            print "Step #3: Build 'base-backend' service."
+            dc build base-backend
+        else
+            print "Step #3: Skip build 'base-backend' service, it will be downloaded from docker hub on Step #4."
+        fi
+
 
         print "Step #4: Build 'backend' service."
         dc build backend
@@ -68,10 +83,14 @@ case "$SERVICE" in
         print "Step #2: Install and run 'postgres' service."
         dc up -d postgres
 
-        print "Step #3: Build 'base-backend' service."
-        dc build base-ethwallet
+        if [ "$TRAVIS" == "true" ]; then
+            print "Step #3: Build 'base-backend' service."
+            dc build base-ethwallet
+        else
+            print "Step #3: Skip build 'base-backend' service, it will be downloaded from docker hub on Step #4."
+        fi
 
-        print "Step #4: Build 'backend' service."
+        print "Step #4: Build 'ethwallet' service."
         dc build ethwallet
 
         print "Step #5: Create 'ethwallet' database."
