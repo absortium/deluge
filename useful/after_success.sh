@@ -14,7 +14,7 @@ declare DOCKER_PASS="$2"
 declare SERVICE="$3"
 declare BRANCH="$4"
 
-export $DELUGE_PATH="$PWD"
+export DELUGE_PATH="$PWD"
 
 echo "SERVICE=$SERVICE"
 echo "BRANCH=$BRANCH"
