@@ -109,7 +109,7 @@ services:
 # ======================================================================================================================
   postgres:
     container_name: postgres
-    image: postgres
+    image: postgres:latest
     volumes:
       - "prod_dbdata:/var/lib/postgresql/data"
 
@@ -121,7 +121,7 @@ services:
 # ======================================================================================================================
   rabbitmq:
     container_name: rabbitmq
-    image: rabbitmq
+    image: rabbitmq:latest
 
 volumes:
   prod_dbdata:

@@ -17,7 +17,7 @@ services:
 # ======================================================================================================================
   # Base  backend service which include the parameteres that backend and celery worker share
   backend:
-    image: backend
+    image: backend:latest
     volumes:
       - ${DELUGE_PATH}/services/backend/src:/opt/deluge/services/backend/src
       - ${DELUGE_PATH}/services/backend/libs/:/opt/deluge/services/backend/libs/
@@ -119,19 +119,19 @@ services:
 # ======================================================================================================================
   postgres:
     container_name: postgres
-    image: postgres
+    image: postgres:latest
     volumes:
       - "dev_dbdata:/var/lib/postgresql/data"
 
 # ======================================================================================================================
   redis:
     container_name: redis
-    image: redis
+    image: redis:latest
 
 # ======================================================================================================================
   rabbitmq:
     container_name: rabbitmq
-    image: rabbitmq
+    image: rabbitmq:latest
 
 # ==================================================================================================================== #
 #                                                    OTHER                                                             #
