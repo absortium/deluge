@@ -26,7 +26,7 @@ for f in $DELUGE_PATH/useful/aliases/*; do
     source "$f"
 done
 
-if [[ -n "$BRANCH" ] && [ -n "$DOCKER_USER" ] && [ -n "$DOCKER_USER" ]]; then
+if [[ -n "$BRANCH" && -n "$DOCKER_USER" && -n "$DOCKER_USER" ]]; then
     print "Step #1 Login to the DockerHub"
     docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
