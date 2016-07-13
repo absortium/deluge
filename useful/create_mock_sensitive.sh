@@ -2,7 +2,7 @@
 
 touch .sensitive
 
-echo "export DJANGO_SECRET_KEY='django_secret_key'" >> .sensitive
+echo "export DJANGO_SECRET_KEY='52i_r%4p#xfHj*tzt8g_^(=85as23lK!m$u*t42#2fdawyqzp)'" >> .sensitive
 echo "export POSTGRES_PASSWORD='postgres'" >> .sensitive
 
 echo "export DATADOG_API_KEY='db9c2e6759a10091c8c49ab875d420aa'" >> .sensitive
