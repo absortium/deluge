@@ -14,8 +14,11 @@ declare DOCKER_PASS="$2"
 declare SERVICE="$3"
 declare BRANCH="$4"
 
+export $DELUGE_PATH="$PWD"
+
 echo "SERVICE=$SERVICE"
 echo "BRANCH=$BRANCH"
+echo "DELUGE_PATH=$DELUGE_PATH"
 
 print "Step #0: Install aliases."
 for f in $DELUGE_PATH/useful/aliases/*; do
