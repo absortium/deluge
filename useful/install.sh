@@ -12,6 +12,12 @@ print () {
 declare SERVICE="$1"
 echo "SERVICE=$SERVICE"
 
+declare BRANCH="$2"
+if [ -z $BRANCH ]; then
+    BRANCH="development"
+fi
+echo "BRANCH=$BRANCH"
+
 export DELUGE_PATH="$PWD"
 echo "DELUGE_PATH=$DELUGE_PATH"
 
@@ -23,6 +29,12 @@ done
 
 print  "Step #1: Turn on 'unit' mode."
 dcinit unit
+
+# Update branch
+pushd services/$SERVICE
+git checkout $BRANCH
+git pull
+popd
 
 case "$SERVICE" in
     'frontend' )
@@ -63,7 +75,7 @@ case "$SERVICE" in
         dc build ethwallet
 
         print "Step #5: Create 'ethwallet' database."
-        dex postgres psql -c "CREATE DATABASE IF NOT EXISTS ethwallet" -U postgres
+        dex postgres psql -c "CREATE DATABASE ethwallet" -U postgres
 
         print "Step #6: Migrate database."
         dc run m-ethwallet migrate
