@@ -27,22 +27,24 @@ for f in $DELUGE_PATH/useful/aliases/*; do
 done
 
 if [[ -n "$BRANCH" && -n "$DOCKER_USER" && -n "$DOCKER_USER" ]]; then
+    echo "$(docker images)"
+
     print "Step #1 Login to the DockerHub"
     docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
     if [ "$BRANCH" == "master" ]; then
         declare IMAGE="$SERVICE"
 
-        print "Step #2: Switch to the 'realnet' mode."
+        print "Step #2: Switch to the 'realnet' mode (production images)."
         dcinit realnet
 
-        print "Step #3: Build $IMAGE image."
-        dc build frontend
+        print "Step #3: Build '$IMAGE' image."
+        dc build "$IMAGE"
 
     elif [ "$BRANCH" == "development" ]; then
         declare IMAGE="base-$SERVICE"
 
-        print "Step #2: Switch to the 'unit' mode."
+        print "Step #2: Switch to the 'unit' mode (development images)."
         dcinit unit
 
         print "Step #3: Image $IMAGE should be already built."
