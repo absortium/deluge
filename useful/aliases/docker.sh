@@ -49,7 +49,7 @@ alias drmi=func_drmi
 
 func_flushdb() {
     drmc ".*" 
-    drmd images_dbdata
+    drmd images_dev_dbdata
     dc up -d postgres
     sleep 4
     dc run m-backend migrate
