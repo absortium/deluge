@@ -7,3 +7,6 @@
 [submodule "services/ethwallet"]
 	path = services/ethwallet
 	url =  https://github.com/absortium/ethwallet.git
+[submodule "services/poloniexbot"]
+	path = services/poloniexbot
+	url = https://github.com/absortium/poloniexbot.git
