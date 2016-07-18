@@ -13,9 +13,6 @@ declare SERVICE="$1"
 echo "SERVICE=$SERVICE"
 
 declare BRANCH="$2"
-if [ -z $BRANCH ]; then
-    BRANCH="development"
-fi
 echo "BRANCH=$BRANCH"
 
 declare TRAVIS="$3"
@@ -36,11 +33,12 @@ done
 print  "Step #1: Turn on 'unit' mode."
 dcinit unit
 
-# Update branch
-pushd services/$SERVICE
-git checkout $BRANCH
-git pull
-popd
+if [ -n $BRANCH ]; then
+    pushd services/$SERVICE
+    git checkout $BRANCH
+    git pull
+    popd
+fi
 
 echo """$(tree "$DELUGE_PATH/services/$SERVICE")"""
 
