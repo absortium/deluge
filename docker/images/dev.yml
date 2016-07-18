@@ -19,8 +19,8 @@ services:
   backend:
     image: backend:latest
     volumes:
-      - ${DELUGE_PATH}/services/backend/src:/opt/deluge/services/backend/src
-      - ${DELUGE_PATH}/services/backend/libs/:/opt/deluge/services/backend/libs/
+      - ${DELUGE_PATH}/services/backend/:/opt/deluge/services/backend/
+      - ${DELUGE_PATH}/libs/:/opt/deluge/libs/
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -62,7 +62,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - AUTH=False
     volumes:
-      - ${DELUGE_PATH}/services/backend/libs/core:/opt/deluge/services/backend/libs/core
+      - ${DELUGE_PATH}/libs/:/opt/deluge/libs/
       - ${DELUGE_PATH}/services/ethwallet/:/opt/deluge/services/ethwallet/
     entrypoint: ["python3", "manage.py"]
     command: ["--help"]
@@ -89,7 +89,7 @@ services:
   poloniexbot:
     image: poloniexbot
     volumes:
-      - ${DELUGE_PATH}/services/backend/libs/core:/opt/deluge/services/backend/libs/core
+      - ${DELUGE_PATH}/libs/:/opt/deluge/libs/
       - ${DELUGE_PATH}/services/poloniexbot/:/opt/deluge/services/poloniexbot/
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}

@@ -11,10 +11,10 @@ ENV UNAME "docker"
 # the application rather than buffering it.
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && pip3 install --upgrade pip
-
 # Add non-root user in order to run celery
 RUN groupadd "$UNAME" && useradd -g "$UNAME" "$UNAME"
+
+RUN apt-get update && pip3 install --upgrade pip
 
 WORKDIR "$DOCKER_PROJECT_PATH"
 

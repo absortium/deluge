@@ -1,6 +1,6 @@
 FROM absortium/base-ethwallet
 
-ENV LIBS_PATH "libs/"
+ENV LIBS_PATH "libs"
 
 COPY "$LIBS_PATH/core" "$LIBS_PATH/core"
 
