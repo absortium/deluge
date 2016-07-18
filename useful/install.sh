@@ -9,20 +9,32 @@ print () {
     echo -e "${GREEN}$1${NC}"
 }
 
-declare SERVICE="$1"
-echo "SERVICE=$SERVICE"
+export DELUGE_PATH="$PWD"
+declare BRANCH=""
+declare SERVICE=""
+declare TRAVIS="false"
 
-declare BRANCH="$2"
-echo "BRANCH=$BRANCH"
+while getopts "b:t:s:" option; do
+    case "$option" in
+        b) BRANCH="${OPTARG}" ;;
+        t) TRAVIS="${OPTARG}" ;;
+        s) SERVICE="${OPTARG}" ;;
+        ?) echo "error: option -$OPTARG is not implemented"; exit ;;
+    esac
+done
+# remove the options from the positional parameters
+shift $(( OPTIND - 1 ))
 
-declare TRAVIS="$3"
-if [ -z $TRAVIS ]; then
-    TRAVIS="false"
+if [ -z "$SERVICE" ]; then
+    echo "Error: -s flag (service) should be specified."
+    exit;
 fi
+
+echo "SERVICE=$SERVICE"
+echo "BRANCH=$BRANCH"
+echo "DELUGE_PATH=$DELUGE_PATH"
 echo "TRAVIS=$TRAVIS"
 
-export DELUGE_PATH="$PWD"
-echo "DELUGE_PATH=$DELUGE_PATH"
 
 print "Step #0: Install aliases."
 for f in $DELUGE_PATH/useful/aliases/*; do
