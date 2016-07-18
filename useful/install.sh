@@ -45,7 +45,7 @@ done
 print  "Step #1: Turn on 'unit' mode."
 dcinit unit
 
-if [ -n $BRANCH ]; then
+if [ -n "$BRANCH" ]; then
     pushd services/$SERVICE
     git checkout $BRANCH
     git pull
