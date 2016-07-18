@@ -42,7 +42,7 @@ git checkout $BRANCH
 git pull
 popd
 
-echo $(tree "$DELUGE_PATH/services/$SERVICE")
+echo """$(tree "$DELUGE_PATH/services/$SERVICE")"""
 
 
 case "$SERVICE" in
