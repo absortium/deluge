@@ -22,4 +22,7 @@ echo "export ETHWALLET_API_SECRET='ec7fa071ee9c7fla176093036bc7eae4ef6764f2'" >>
 echo "export POLONIEX_API_KEY='DWEBL3SB-2I9IL6ZR-A6SW5U2K-7UIVPGHA'" >> .sensitive
 echo "export POLONIEX_API_SECRET='8bd68eb9093e74ffb84c88088564b53ada30e5af5efdd385610af588dfb780244406fe90a67e001546071c7f7b315e6520b25e78b8f511b06afd8b25285ec7ab'" >> .sensitive
 
+echo "export ABSORTIUM_API_KEY='8c90b0b7da17f792ac0f8b17b70e1451ca7bd472'" >> .sensetive
+echo "export ABSORTIUM_API_SECRET='529cbd8419fa99898da1ca395eb43d1d0ffec28c'" >> .sensetive
+
 cat .sensitive
