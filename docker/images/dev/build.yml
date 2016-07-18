@@ -14,3 +14,9 @@ services:
     build:
       context: ${DELUGE_PATH}
       dockerfile: ./docker/images/dev/ethwallet/Dockerfile
+
+  poloniexbot:
+    image: poloniexbot
+    build:
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/images/dev/poloniexbot/Dockerfile

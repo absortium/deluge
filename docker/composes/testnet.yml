@@ -7,6 +7,11 @@ services:
     links:
       - "m-backend:docker.backend"
 
+  # Backend DJANGO general service (used for management)
+  backend:
+    links:
+      - "postgres:docker.postgres"
+
   # Backend DJANGO service
   m-backend:
     links:
@@ -30,6 +35,11 @@ services:
     environment:
       - MODE=testnet
 
+  # Ethwallet DJANGO general service (used for management)
+  ethwallet:
+    links:
+      - "postgres:docker.postgres"
+
   # Ethereum wallet backend DJANGO service
   m-ethwallet:
     links:
@@ -46,6 +56,12 @@ services:
       - "postgres:docker.postgres"
       - "redis:docker.celery.backend"
       - "ethnode:docker.ethnode"
+
+
+  poloniexbot:
+  links:
+    - "postgres:docker.postgres"
+    - "m-backend:docker.backend"
 
   ethnode:
     ports:

@@ -7,6 +7,11 @@ services:
     links:
       - "m-backend:docker.backend"
 
+  # Backend DJANGO general service (used for management)
+  backend:
+    links:
+      - "postgres:docker.postgres"
+
   # Backend DJANGO service
   m-backend:
     links:
@@ -26,10 +31,10 @@ services:
     environment:
       - MODE=frontend
 
-  poloniexsync:
+  poloniexbot:
     links:
       - "postgres:docker.postgres"
-      - "router:docker.router"
+      - "m-backend:docker.backend"
 
   router:
     ports:

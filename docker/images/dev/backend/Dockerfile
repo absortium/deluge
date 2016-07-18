@@ -1,6 +1,11 @@
 FROM absortium/base-backend
 
-COPY "$LIBS_PATH" "$LIBS_PATH"
+ENV LIBS_PATH "libs/"
+
+COPY "$LIBS_PATH/core" "$LIBS_PATH/core"
+COPY "$LIBS_PATH/ethwallet" "$LIBS_PATH/ethwallet"
+COPY "$LIBS_PATH/poloniex" "$LIBS_PATH/poloniex"
+
 RUN chown -R "$UNAME:$UNAME" "$LIBS_PATH"
 
 # Setup core in develop mode

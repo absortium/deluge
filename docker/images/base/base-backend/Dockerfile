@@ -3,7 +3,6 @@ FROM python:3.5
 
 MAINTAINER Andrey Samokhvalov (andrew.shvv@gmail.com)
 
-ENV LIBS_PATH "services/backend/libs/"
 ENV APP_PATH  "services/backend/src"
 ENV DOCKER_PROJECT_PATH  "/opt/deluge"
 ENV UNAME "docker"

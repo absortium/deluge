@@ -24,17 +24,20 @@ services:
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
-      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
+
+    entrypoint: ["python", "-u", "manage.py"]
+    command: ["--help"]
 
   # Backend DJANGO service
   m-backend:
     extends: backend
     container_name: m-backend
     environment:
+      - WHOAMI=DJANGO
       - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
       - AUTH0_API_KEY=${AUTH0_API_KEY}
-      - WHOAMI=DJANGO
+      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
+      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
     entrypoint: ["python3", "manage.py"]
     command: ["runserver" , "0.0.0.0:3000"]
 
@@ -51,17 +54,6 @@ services:
     entrypoint: ["celery"]
     command: ["-A" , "absortium.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
-  # Poloniex sync
-  poloniexsync:
-    extends: backend
-    container_name: poloniexsync
-    environment:
-      - POLONIEX_API_SECRET=${POLONIEX_API_SECRET}
-      - POLONIEX_API_KEY=${POLONIEX_API_KEY}
-      - WHOAMI=DJANGO
-    entrypoint: ["python3", "manage.py"]
-    command: ["poloniexsync"]
-
 # ======================================================================================================================
   ethwallet:
     image: ethwallet
@@ -72,6 +64,8 @@ services:
     volumes:
       - ${DELUGE_PATH}/services/backend/libs/core:/opt/deluge/services/backend/libs/core
       - ${DELUGE_PATH}/services/ethwallet/:/opt/deluge/services/ethwallet/
+    entrypoint: ["python3", "manage.py"]
+    command: ["--help"]
 
   # Ethereum wallet backend DJANGO service
   m-ethwallet:
@@ -90,6 +84,23 @@ services:
       - WHOAMI=CELERY
     entrypoint: ["celery"]
     command: ["-A" , "ethwallet.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
+
+# ======================================================================================================================
+  poloniexbot:
+    image: poloniexbot
+    volumes:
+      - ${DELUGE_PATH}/services/backend/libs/core:/opt/deluge/services/backend/libs/core
+      - ${DELUGE_PATH}/services/poloniexbot/:/opt/deluge/services/poloniexbot/
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POLONIEX_API_SECRET=${POLONIEX_API_SECRET}
+      - POLONIEX_API_KEY=${POLONIEX_API_KEY}
+      - ABSORTIUM_API_SECRET=${ABSORTIUM_API_SECRET}
+      - ABSORTIUM_API_KEY=${ABSORTIUM_API_KEY}
+      - WHOAMI=DJANGO
+    entrypoint: ["python3", "manage.py"]
+    command: ["sync"]
 
   # ======================================================================================================================
   notifier:

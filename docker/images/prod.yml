@@ -15,14 +15,17 @@ services:
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
-      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
+    # Backend DJANGO migration service
+    entrypoint: ["python", "-u", "manage.py"]
+    command: ["--help"]
 
   # Backend DJANGO service
   m-backend:
     extends: backend
     container_name: m-backend
     environment:
+      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
+      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
       - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
       - AUTH0_API_KEY=${AUTH0_API_KEY}
       - WHOAMI=DJANGO
@@ -42,32 +45,20 @@ services:
     entrypoint: ["celery"]
     command: ["-A" , "absortium.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
-  # Backend DJANGO migration service
-  manage-backend:
-    extends: backend
-    container_name: m-backend
-    links:
-      - "postgres:docker.postgres"
-    environment:
-      - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
-      - AUTH0_API_KEY=${AUTH0_API_KEY}
-      - WHOAMI=DJANGO
-    entrypoint: ["python", "-u", "manage.py"]
-    command: ["--help"]
-
 # ======================================================================================================================
   ethwallet:
     image: absortium/ethwallet:latest
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - WHOAMI=DJANGO
+    entrypoint: ["python", "-u", "manage.py"]
+    command: ["--help"]
 
   # Ethereum wallet backend DJANGO service
   m-ethwallet:
     extends: ethwallet
     container_name: m-ethwallet
-    environment:
-      - WHOAMI=DJANGO
     entrypoint: ["gunicorn"]
     command: ["-b" , "0.0.0.0:3000", "--workers=5",  "wsgi"]
 

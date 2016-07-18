@@ -9,6 +9,10 @@ services:
     links:
       - "postgres:docker.postgres"
 
+  poloniexbot:
+    links:
+      - "postgres:docker.postgres"
+
   postgres:
     ports:
       - "5000:5432"

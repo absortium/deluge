@@ -1,9 +1,11 @@
 FROM absortium/base-ethwallet
 
-COPY "$CORE_PATH" "$CORE_PATH"
+ENV LIBS_PATH "libs/"
+
+COPY "$LIBS_PATH/core" "$LIBS_PATH/core"
 
 # Setup core in develop mode
-RUN pip3 install -e "$CORE_PATH"
+RUN pip3 install -e "$LIBS_PATH/core"
 
 # Log in as ethereum user
 USER "$UNAME"

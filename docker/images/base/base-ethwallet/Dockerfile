@@ -4,7 +4,6 @@ FROM python:3.5
 MAINTAINER Andrey Samokhvalov (andrew.shvv@gmail.com)
 
 ENV APP_PATH "services/ethwallet"
-ENV CORE_PATH "services/backend/libs/core"
 ENV DOCKER_PROJECT_PATH  "/opt/deluge"
 ENV UNAME "docker"
 

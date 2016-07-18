@@ -18,6 +18,12 @@ services:
       context: ${DELUGE_PATH}
       dockerfile: ./docker/images/base/base-ethwallet/Dockerfile
 
+  base-poloniexbot:
+    image: absortium/base-poloniexbot:latest
+    build:
+      context: ${DELUGE_PATH}
+      dockerfile: ./docker/images/base/base-poloniexbot/Dockerfile
+
   router:
     image: absortium/router:latest
     build:
