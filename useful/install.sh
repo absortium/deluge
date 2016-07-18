@@ -42,6 +42,9 @@ git checkout $BRANCH
 git pull
 popd
 
+echo $(tree "$DELUGE_PATH/services/$SERVICE")
+
+
 case "$SERVICE" in
     'frontend' )
         if [ "$TRAVIS" == "true" ]; then

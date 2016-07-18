@@ -4,7 +4,7 @@ FROM python:3.5
 MAINTAINER Andrey Samokhvalov (andrew.shvv@gmail.com)
 
 ENV APP_PATH "services/backend"
-ENV DOCKER_PROJECT_PATH  "/opt/deluge"
+ENV DOCKER_PROJECT_PATH "/opt/deluge"
 ENV UNAME "docker"
 
 # Ensure that Python outputs everything that's printed inside
