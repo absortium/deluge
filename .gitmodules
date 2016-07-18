@@ -10,3 +10,15 @@
 [submodule "services/poloniexbot"]
 	path = services/poloniexbot
 	url = https://github.com/absortium/poloniexbot.git
+[submodule "libs/poloniex-api"]
+	path = libs/poloniex-api
+	url = https://github.com/absortium/poloniex-api.git
+[submodule "libs/ethwallet-api"]
+	path = libs/ethwallet-api
+	url = https://github.com/absortium/ethwallet-api.git
+[submodule "libs/absortium-api"]
+	path = libs/absortium-api
+	url = https://github.com/absortium/absortium-api.git
+[submodule "libs/core"]
+	path = libs/core
+	url = https://github.com/absortium/core.git

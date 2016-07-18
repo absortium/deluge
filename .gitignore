@@ -60,3 +60,4 @@ target/
 .sensitive
 .DS_Store
 docker/images/dev/ethnode/ethash/*
+.gitignore
