@@ -52,9 +52,6 @@ if [ -n $BRANCH ]; then
     popd
 fi
 
-echo """$(tree "$DELUGE_PATH/services/$SERVICE")"""
-
-
 case "$SERVICE" in
     'frontend' )
         if [ "$TRAVIS" == "true" ]; then
