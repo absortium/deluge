@@ -24,7 +24,8 @@ services:
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-
+      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
+      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
     entrypoint: ["python", "-u", "manage.py"]
     command: ["--help"]
 
@@ -36,8 +37,6 @@ services:
       - WHOAMI=DJANGO
       - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
       - AUTH0_API_KEY=${AUTH0_API_KEY}
-      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
-      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
     entrypoint: ["python3", "manage.py"]
     command: ["runserver" , "0.0.0.0:3000"]
 

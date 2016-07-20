@@ -88,14 +88,14 @@ func_pdbaccounts() {
 }
 alias pdbaccounts=func_pdbaccounts
 
-func_pdbexchanges() {
+func_pdborders() {
     if [ -z "$@" ]; then
-        func_pdbconnect "select * from absortium_exchange;"
+        func_pdbconnect "select * from absortium_order;"
     else
-        func_pdbconnect "select * from absortium_exchange $@;"
+        func_pdbconnect "select * from absortium_order $@;"
     fi
 }
-alias pdbexchanges=func_pdbexchanges
+alias pdborders=func_pdborders
 
 # Clean rabbitmq celery queue
 alias cleanrabbit="dex rabbitmq rabbitmqctl purge_queue celery"
