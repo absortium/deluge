@@ -3,13 +3,11 @@
 
 ### What we want to do?
 - [x] Create system for exchange `BTC`on `ETH` and visa versa. ([backend](https://github.com/absortium/backend))
-- [x] Make integration with `Poloniex` and `Kraken` for get liquidity. ([poloniexbot](https://github.com/absortium/poloniexbot))
-- [ ] Create widget for sites like `Augur` to deposit money on the smart contract with `BTC`.
+- [x] Make integration with [Poloniex](http://poloniex.com). ([poloniexbot](https://github.com/absortium/poloniexbot))
+- [ ] Make integration with [Kraken](https://www.kraken.com/). 
+- [ ] Create widget for sites like [Augur](https://www.augur.net/) to deposit money on the smart contract with `BTC`.
 - [ ] Add exchange `USD` on `ETH` and visa versa.
 - [ ] Create solution for `Slock.it` for receiving payments on their smart contract with bank cards.
-
-
-[Trello](https://trello.com/absortium).
 
 ## Parts
 * [frontend](https://github.com/absortium/frontend)
