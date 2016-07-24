@@ -5,7 +5,14 @@
 
 # Init deluge project
 ideluge() {
-    source "$DELUGE_PATH/.sensitive"
+    declare SENSITIVE_FILE="$1"
+
+    if [ -z "$SENSITIVE_FILE" ]; then
+        echo "You should specify sensitive file name."
+        exit 0
+    fi
+
+    source "$DELUGE_PATH/$SENSITIVE_FILE"
 }
 
 # Go to the deluge directory

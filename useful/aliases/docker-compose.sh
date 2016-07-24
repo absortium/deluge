@@ -11,13 +11,24 @@ func_dcinit() {
         echo "Use default init mode '$DEFAULT_MODE'"
         COMPOSE_MODE="$DEFAULT_MODE"
     fi
+
+    declare SENSITIVE_FILE="$1"
     
     case "$COMPOSE_MODE" in
     'unit'|'integration'|'frontend')
-        export IMAGE_TYPE="dev";;
+        export IMAGE_TYPE="dev"
+        ideluge ".mock-sensitive"
+        ;;
 
-    'testnet'|'realnet' )
-        export IMAGE_TYPE="prod";;
+    'testnet')
+        export IMAGE_TYPE="prod"
+        ideluge ".testnet-sensitive"
+        ;;
+
+    'realnet')
+        export IMAGE_TYPE="prod"
+        ideluge ".realnet-sensitive"
+        ;;
 
     *)
         echo "Can not find any options similar to '$1'";;
@@ -28,8 +39,6 @@ func_dcinit() {
 
     export DOCKER_OVERRIDE="$COMPOSES_PATH/$COMPOSE_MODE.yml"
     export DOCKER_BASE="$IMAGES_PATH/$IMAGE_TYPE.yml"
-
-    ideluge
 }
 alias dcinit=func_dcinit
 
