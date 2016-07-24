@@ -1,0 +1,74 @@
+version: "2"
+services:
+
+  frontend:
+    ports:
+      - "80:80"
+    links:
+      - "m-backend:docker.backend"
+
+  # Backend DJANGO general service (used for management)
+  backend:
+    links:
+      - "postgres:docker.postgres"
+
+  # Backend DJANGO service
+  m-backend:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
+      - "m-ethwallet:docker.ethwallet"
+      - "w-backend"
+    environment:
+      - MODE=realnet
+
+  # Backend celery worker
+  w-backend:
+    links:
+      - "postgres:docker.postgres"
+      - "router:docker.router"
+      - "rabbitmq:docker.celery.broker"
+      - "redis:docker.celery.backend"
+      - "m-ethwallet:docker.ethwallet"
+    environment:
+      - MODE=realnet
+
+  # Ethwallet DJANGO general service (used for management)
+  ethwallet:
+    links:
+      - "postgres:docker.postgres"
+
+  # Ethereum wallet backend DJANGO service
+  m-ethwallet:
+    links:
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+      - "redis:docker.celery.backend"
+      - "w-ethwallet"
+
+  # Ethereum wallet celery worker
+  w-ethwallet:
+    links:
+      - "rabbitmq:docker.celery.broker"
+      - "postgres:docker.postgres"
+      - "redis:docker.celery.backend"
+      - "ethnode:docker.ethnode"
+
+
+  poloniexbot:
+    links:
+      - "postgres:docker.postgres"
+      - "m-backend:docker.backend"
+
+  ethnode:
+    entrypoint: ["geth"]
+    command: [
+      "--fast",
+      "--datadir", ".",
+      "--rpc",
+      "--rpcapi", "personal,db,eth",
+      "--rpcaddr" ,"0.0.0.0",
+      "--rpcport", "8545"
+    ]
