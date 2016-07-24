@@ -1,5 +1,13 @@
 version: "2"
 services:
+  
+  backend:
+    links:
+      - "postgres:docker.postgres"
+  
+  ethwallet:
+    links:
+      - "postgres:docker.postgres"
 
   m-backend:
     links:

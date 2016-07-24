@@ -71,17 +71,19 @@ services:
     entrypoint: ["celery"]
     command: ["-A" , "ethwallet.celery.app", "worker", "-B", "--loglevel=info", "-c", "3"]
 
-  # Ethereum wallet DJANGO migration service
-  manage-ethwallet:
-    extends: ethwallet
-    container_name: m-ethwallet
+# ======================================================================================================================
+  poloniexbot:
+    image: absortium/poloniexbot:latest
     environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POLONIEX_API_SECRET=${POLONIEX_API_SECRET}
+      - POLONIEX_API_KEY=${POLONIEX_API_KEY}
+      - ABSORTIUM_API_SECRET=${ABSORTIUM_API_SECRET}
+      - ABSORTIUM_API_KEY=${ABSORTIUM_API_KEY}
       - WHOAMI=DJANGO
-    links:
-      - "postgres:docker.postgres"
-      - "ethnode:docker.ethnode"
-    entrypoint: ["python", "-u", "manage.py"]
-    command: ["--help"]
+    entrypoint: ["python3", "manage.py"]
+    command: ["sync"]
 
 # ======================================================================================================================
   router:

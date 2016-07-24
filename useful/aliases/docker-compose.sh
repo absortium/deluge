@@ -20,8 +20,7 @@ func_dcinit() {
         export IMAGE_TYPE="prod";;
 
     *)
-        echo "Can not find any options similar to '$1'"
-        break
+        echo "Can not find any options similar to '$1'";;
     esac
 
     declare COMPOSES_PATH="$DELUGE_PATH/docker/composes"

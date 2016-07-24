@@ -59,9 +59,9 @@ services:
 
 
   poloniexbot:
-  links:
-    - "postgres:docker.postgres"
-    - "m-backend:docker.backend"
+    links:
+      - "postgres:docker.postgres"
+      - "m-backend:docker.backend"
 
   ethnode:
     ports:
