@@ -15,6 +15,8 @@ services:
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
+      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
     # Backend DJANGO migration service
     entrypoint: ["python", "-u", "manage.py"]
     command: ["--help"]
@@ -24,8 +26,6 @@ services:
     extends: backend
     container_name: m-backend
     environment:
-      - ETH_NOTIFICATION_TOKEN=${ETH_NOTIFICATION_TOKEN}
-      - BTC_NOTIFICATION_TOKEN=${BTC_NOTIFICATION_TOKEN}
       - AUTH0_SECRET_KEY=${AUTH0_SECRET_KEY}
       - AUTH0_API_KEY=${AUTH0_API_KEY}
       - WHOAMI=DJANGO
