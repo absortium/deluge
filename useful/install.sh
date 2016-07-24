@@ -82,7 +82,7 @@ case "$SERVICE" in
         dc build backend
 
         print "Step #5: Migrate database."
-        dc run m-backend migrate
+        dc run backend migrate
 
         print "Step #6: Run tests."
         dc run m-backend test --verbosity 2 absortium.tests.unit
@@ -93,21 +93,21 @@ case "$SERVICE" in
         print "Step #2: Install and run 'postgres' service."
         dc up -d postgres
 
+        print "Step #3: Create 'ethwallet' database."
+            dex postgres psql -c "CREATE DATABASE ethwallet" -U postgres
+
         if [ "$TRAVIS" == "true" ]; then
-            print "Step #3: Build 'base-backend' service."
+            print "Step #4: Build 'base-backend' service."
             dc build base-ethwallet
         else
-            print "Step #3: Skip build 'base-backend' service, it will be downloaded from docker hub on Step #4."
+            print "Step #4: Skip build 'base-backend' service, it will be downloaded from docker hub on Step #5."
         fi
 
-        print "Step #4: Build 'ethwallet' service."
+        print "Step #5: Build 'ethwallet' service."
         dc build ethwallet
 
-        print "Step #5: Create 'ethwallet' database."
-        dex postgres psql -c "CREATE DATABASE ethwallet" -U postgres
-
         print "Step #6: Migrate database."
-        dc run m-ethwallet migrate
+        dc run ethwallet migrate
 
         print "Step #7: Run tests."
         dc run m-ethwallet test --verbosity 2 ethwallet.tests.unit
