@@ -30,7 +30,7 @@
     * `geth`
     * `docker`
 * [poloniexbot](https://github.com/absortium/poloniexbot)
-    * `django`
+    * `asyncio`
     * `postgresql`
     * `celery`
     * `rabbitmq`
