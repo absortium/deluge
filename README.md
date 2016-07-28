@@ -5,11 +5,10 @@ Content
 * [For programmers](#for-programmers)
    * [Parts and technologies](#parts-and-technologies)
    * [Interaction](#interaction)
-   * [Contributing](#contributing)
 
 * [For clients](#for-clients)
-    * widget integration
-    * widget statistic
+    * Widget integration
+    * Widget statistic
 
 * [For users](#for-users)
     * how pay for smart contracts with BTC?
