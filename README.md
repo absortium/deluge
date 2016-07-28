@@ -35,7 +35,7 @@ We want to do this by creating widget which will be embedded on the sites, somet
 For programmers
 =================
 ## Parts and technologies
-* [frontend](https://github.com/absortium/frontend) - UI for creating the ETH/BTC addresses exchange BTC on Eterheum and visa versa.
+* [frontend](https://github.com/absortium/frontend) - UI for creating the ETH/BTC addresses, exchange `BTC` on `ETH` and visa versa, deposit, withdraw money.
     * `react`
     * `redux`
     * `webpack`
