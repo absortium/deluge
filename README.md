@@ -3,13 +3,15 @@ Content
 
 * [Concept](#concept)
 * [For programmers](#for-programmers)
-   * from which parts application consists?
-   * which technologies we use?
-   * how they interact?
-   * how to contribute?
+   * [parts](#parts)
+   * [technologies](#technologies)
+   * [interaction](#interaction)
+   * [contributing](#contributing)
+
 * [For clients](#for-clients)
-    * how to integrate widget on the site?
-    * how to get the widget statistics?
+    * widget integration
+    * widget statistic
+
 * [For users](#for-users)
     * how pay for smart contracts with BTC?
     * how I get money back from smart contract?
@@ -25,19 +27,33 @@ Content
 
 Concept
 =================
-`Absortium` - is a service which allows to pay for `Ethereum` smart contracts by `BTC`, and later with the `USD`, `EUR`, `RUB`. We are very excited by new technologies, built on blockchain and we believe in the future of it and particulary in `Ethereum` and smart contracts, we want to be part of the future and help companies like [Slock.it](https://slock.it/), [Augur](https://www.augur.net/) to achieve their goals. We love the openness and believe that it is the only way to achieve true security and transparency, so that is why all our sources are publicly available, and you can watch our activity and check all the code we produce.
-
-Todo
-=================
-
-- [x] Create system for exchange `BTC`on `ETH` and visa versa. ([backend](https://github.com/absortium/backend))
-- [x] Make integration with [Poloniex](http://poloniex.com) to get liquidity. ([poloniexbot](https://github.com/absortium/poloniexbot))
-- [ ] Create widget for sites like [Augur](https://www.augur.net/) to deposit money on the smart contract with `BTC`.
-- [ ] Add exchange `USD` on `ETH` and visa versa.
-- [ ] Create solution for `Slock.it` for receiving payments on their smart contract with bank cards.
+`Absortium` - is a service which allows to pay for `Ethereum` smart contracts by `BTC`. We are very excited by new technologies, built on blockchain and we believe in the future of it and particulary in `Ethereum` and smart contracts, we want to be part of the future. We love the openness and believe that it is the only way to achieve true security and transparency, so that is why all our sources are publicly available, and you can watch our activity and check all the code we produce.
 
 For programmers
 =================
+## Parts
+* [frontend](https://github.com/absortium/frontend) - UI for creating the ETH/BTC addresses exchange BTC on Eterheum and visa versa.
+    * `react`
+    * `redux`
+    * `webpack`
+    * `nodejs`
+    * `material-ui`
+* [backend](https://github.com/absortium/backend) - backend for creating/canceling/updating/appoving orders.
+    * `django`
+    * `postgresql`
+    * `celery`
+    * `rabbitmq`
+    * `crossbar.io`
+* [ethwallet](https://github.com/absortium/ethwallet) - service which acts as coinbase ETH wallet (no longet needed because coinbase anounce ETH integration)
+    * `postgresql`
+    * `celery`
+    * `rabbitmq`
+    * `geth`
+* [poloniexbot](https://github.com/absortium/poloniexbot) - service which is retranslate orders from Absortium to Poloniex.
+    * `asyncio`
+    * `postgresql`
+    * `celery`
+    * `rabbitmq`
 
 For clients
 =================
@@ -49,32 +65,8 @@ For investors
 =================
 
 
-from which parts application consists?
-
-## Parts
-* [frontend](https://github.com/absortium/frontend)
-    * `react`
-    * `redux`
-    * `webpack`
-    * `nodejs`
-    * `material-ui`
-    * `docker`
-* [backend](https://github.com/absortium/backend)
-    * `django`
-    * `postgresql`
-    * `celery`
-    * `rabbitmq`
-    * `crossbar.io`
-    * `docker`
-* [ethwallet](https://github.com/absortium/ethwallet)
-    * `postgresql`
-    * `celery`
-    * `rabbitmq`
-    * `geth`
-    * `docker`
-* [poloniexbot](https://github.com/absortium/poloniexbot)
-    * `asyncio`
-    * `postgresql`
-    * `celery`
-    * `rabbitmq`
-    * `docker`
+Todo
+=================
+- [x] Create system for exchange `BTC`on `ETH` and visa versa. ([backend](https://github.com/absortium/backend))
+- [x] Make integration with [Poloniex](http://poloniex.com) to get liquidity. ([poloniexbot](https://github.com/absortium/poloniexbot))
+- [ ] Create widget.
