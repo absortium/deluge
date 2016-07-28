@@ -55,7 +55,7 @@ For programmers
     * `rabbitmq`
 
 ## Interaction
-![alt tag](https://github.com/absortium/deluge/tree/update_readme/docs/schema.png)
+![Schema](docs/schema.png)
 
 For clients
 =================
