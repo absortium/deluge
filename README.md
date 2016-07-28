@@ -3,10 +3,9 @@ Content
 
 * [Concept](#concept)
 * [For programmers](#for-programmers)
-   * [parts](#parts)
-   * [technologies](#technologies)
-   * [interaction](#interaction)
-   * [contributing](#contributing)
+   * [Parts and technologies](#parts-and-technologies)
+   * [Interaction](#interaction)
+   * [Contributing](#contributing)
 
 * [For clients](#for-clients)
     * widget integration
@@ -31,7 +30,7 @@ Concept
 
 For programmers
 =================
-## Parts
+## Parts and technologies
 * [frontend](https://github.com/absortium/frontend) - UI for creating the ETH/BTC addresses exchange BTC on Eterheum and visa versa.
     * `react`
     * `redux`
@@ -44,7 +43,7 @@ For programmers
     * `celery`
     * `rabbitmq`
     * `crossbar.io`
-* [ethwallet](https://github.com/absortium/ethwallet) - service which acts as coinbase ETH wallet (no longet needed because coinbase anounce ETH integration)
+* [ethwallet](https://github.com/absortium/ethwallet) - service which acts as coinbase ETH wallet (no longer needed because coinbase anounce ETH integration)
     * `postgresql`
     * `celery`
     * `rabbitmq`
@@ -55,6 +54,8 @@ For programmers
     * `celery`
     * `rabbitmq`
 
+## Interaction
+  
 For clients
 =================
 
